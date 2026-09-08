@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Cache de APIs (respuestas crudas — se regeneran solas)
+cache/*.txt
+
+# Entregables generados
+output/*.html
+output/*.pdf
+output/*.json
+
+# Sistema
+.DS_Store

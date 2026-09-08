@@ -1,0 +1,16 @@
+# Dependencias del motor KOL Intelligence System
+# Instalar con:  pip install -r requirements.txt
+#
+# Se acota la versión MAYOR de cada paquete (`<N+1`). Sin cota superior, un
+# `pip install -U` podía traer un major nuevo con cambios incompatibles y
+# romper el motor sin que nada avisara. Las versiones entre paréntesis son
+# las probadas con esta suite (108 tests).
+
+requests>=2.31,<3      # llamadas HTTP a PubMed, ClinicalTrials.gov y Europe PMC
+reportlab>=4.0,<6      # generacion del dossier PDF
+jinja2>=3.1,<4         # plantillas HTML del dashboard
+pypdf>=4.0,<7          # verificacion del PDF (contar paginas, leer texto)
+flask>=3.0,<4          # interfaz web (app.py)
+
+# Solo para desarrollo:
+#   pytest>=8,<9

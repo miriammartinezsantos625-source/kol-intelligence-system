@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOL Dashboard</title>
+<style>
+  /* ---- Paleta Excelia ---- */
+  :root{
+    --navy:#0B1929; --teal:#2DDAAC; --coral:#C47A5C; --blue:#8AAFC8;
+    --cream:#F7F5F1; --ink:#0B1929; --muted:#5b6b7a; --line:#e3ded5;
+    --card:#ffffff; --good:#2DDAAC; --warn:#C47A5C;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+       Helvetica,Arial,sans-serif;background:var(--cream);color:var(--ink);
+       line-height:1.5}
+  a{color:var(--navy)}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px 60px}
+
+  /* ---- Cabecera ---- */
+  header{background:var(--navy);color:#fff}
+  .head-inner{max-width:1100px;margin:0 auto;padding:28px 20px;display:flex;
+       align-items:center;gap:22px;flex-wrap:wrap}
+  .avatar{width:76px;height:76px;border-radius:50%;background:var(--teal);
+       color:var(--navy);display:flex;align-items:center;justify-content:center;
+       font-size:26px;font-weight:700;flex:0 0 auto;letter-spacing:1px}
+  .head-main{flex:1 1 260px;min-width:220px}
+  .head-main h1{margin:0 0 4px;font-size:26px}
+  .head-main .sub{color:var(--blue);font-size:15px}
+  .head-badge{text-align:center;flex:0 0 auto}
+  .tier{display:inline-block;background:var(--teal);color:var(--navy);
+       font-weight:700;padding:6px 14px;border-radius:20px;font-size:14px}
+  .score-num{font-size:34px;font-weight:800;margin-top:6px}
+  .score-num small{font-size:15px;color:var(--blue);font-weight:600}
+
+  /* ---- Pestañas ---- */
+  nav.tabs{background:var(--navy);border-top:1px solid rgba(255,255,255,.08)}
+  .tabs-inner{max-width:1100px;margin:0 auto;display:flex;gap:2px;
+       padding:0 20px;overflow-x:auto}
+  .tabs button{background:none;border:none;color:var(--blue);padding:14px 16px;
+       font-size:14px;font-weight:600;cursor:pointer;border-bottom:3px solid
+       transparent;white-space:nowrap}
+  .tabs button:hover{color:#fff}
+  .tabs button.active{color:#fff;border-bottom-color:var(--teal)}
+
+  .panel{display:none;padding-top:26px}
+  .panel.active{display:block}
+  h2.section{font-size:20px;margin:0 0 16px;color:var(--navy)}
+
+  /* ---- Tarjetas / KPIs ---- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+       gap:14px;margin-bottom:26px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:16px}
+  .kpi .val{font-size:28px;font-weight:800;color:var(--navy)}
+  .kpi .lbl{font-size:13px;color:var(--muted);margin-top:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:20px;margin-bottom:20px}
+
+  /* ---- Medidor de score ---- */
+  .meter{height:14px;background:var(--line);border-radius:8px;overflow:hidden;
+       margin:10px 0 6px}
+  .meter > span{display:block;height:100%;background:var(--teal);
+       border-radius:8px}
+  .breakdown{display:grid;gap:10px;margin-top:14px}
+  .bd-row{display:grid;grid-template-columns:180px 1fr 44px;align-items:center;
+       gap:10px;font-size:14px}
+  .bd-bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+  .bd-bar > span{display:block;height:100%;background:var(--blue);
+       border-radius:6px}
+  .bd-val{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+
+  /* ---- Tablas ---- */
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);
+       vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;
+       letter-spacing:.4px}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;
+       border-radius:10px}
+  .pill.ok{background:rgba(45,218,172,.18);color:#0a7a5c}
+  .pill.na{background:rgba(196,122,92,.18);color:#a24e2b}
+  .pos{font-size:12px;color:var(--muted)}
+
+  /* ---- Listas de briefing ---- */
+  ul.clean{list-style:none;padding:0;margin:0}
+  ul.clean li{padding:9px 0 9px 26px;position:relative;border-bottom:1px solid
+       var(--line)}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li::before{position:absolute;left:0;top:9px}
+  ul.do li::before{content:"✓";color:var(--good);font-weight:700}
+  ul.dont li::before{content:"✕";color:var(--warn);font-weight:700}
+  ul.dot li::before{content:"•";color:var(--teal);font-weight:700;font-size:18px;
+       line-height:1}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:700px){.grid2{grid-template-columns:1fr}
+       .bd-row{grid-template-columns:120px 1fr 40px}}
+
+  /* ---- Avisos / honestidad ---- */
+  .notice{background:rgba(138,175,200,.14);border-left:4px solid var(--blue);
+       padding:14px 16px;border-radius:0 8px 8px 0;font-size:14px}
+  .notice.warn{background:rgba(196,122,92,.12);border-left-color:var(--coral)}
+  .unverified{color:var(--coral);font-weight:700;font-size:13px}
+  .muted{color:var(--muted)}
+  footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);
+       font-size:12.5px;color:var(--muted)}
+  .conf{font-size:13px;font-weight:700}
+  .conf.alta{color:#0a7a5c}.conf.media{color:#a24e2b}.conf.baja{color:#a2302b}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-inner">
+    <div class="avatar" id="avatar">—</div>
+    <div class="head-main">
+      <h1 id="kolName">—</h1>
+      <div class="sub"><span id="kolInstitution"></span><span id="kolCity"></span></div>
+      <div class="sub" id="kolSpecialty"></div>
+    </div>
+    <div class="head-badge">
+      <span class="tier" id="kolTier">—</span>
+      <div class="score-num"><span id="kolScore">—</span><small>/100</small></div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner" id="tabBar"></div>
+</nav>
+
+<div class="wrap">
+  <!-- 1. Resumen -->
+  <section class="panel" data-tab="Resumen">
+    <div class="card" id="quienEsCard" style="display:none">
+      <h2 class="section">Quién es</h2>
+      <p id="quienEs"></p>
+      <p class="muted" id="quienEsNota" style="font-size:12.5px"></p>
+      <p class="notice warn" id="coverageNote" style="display:none"></p>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="card">
+      <h2 class="section">KOL Score</h2>
+      <div class="meter"><span id="scoreBar"></span></div>
+      <div class="muted"><span id="scoreLine"></span></div>
+      <div class="breakdown" id="breakdown"></div>
+    </div>
+    <div class="card">
+      <h2 class="section">Desambiguación</h2>
+      <p>Confianza: <span id="confidence" class="conf"></span></p>
+      <p class="muted" id="disambNotes"></p>
+      <p class="muted" style="font-size:12.5px">Query PubMed:
+        <code id="queryUsed"></code></p>
+    </div>
+  </section>
+
+  <!-- 2. Perfil científico -->
+  <section class="panel" data-tab="Perfil científico">
+    <div class="card">
+      <h2 class="section" id="lineasTitulo">Líneas de investigación</h2>
+      <p class="muted" id="lineasNota"></p>
+      <table id="lineasTabla"><thead><tr><th>Tema (descriptor MeSH)</th>
+        <th>Trabajos</th><th>Último</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="card">
+      <h2 class="section">Tipo de evidencia que produce</h2>
+      <p id="tiposPub" class="muted"></p>
+    </div>
+    <div class="card">
+      <h2 class="section">Coautores habituales</h2>
+      <table id="colabTabla"><thead><tr><th>Coautor</th>
+        <th>Trabajos en común</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="card">
+      <h2 class="section">Actividad por año</h2>
+      <div id="actividad"></div>
+    </div>
+  </section>
+
+  <!-- 3. Publicaciones -->
+  <section class="panel" data-tab="Publicaciones">
+    <div class="kpis" id="pubKpis"></div>
+    <div class="card">
+      <h2 class="section">Publicaciones verificadas</h2>
+      <div id="pubNote"></div>
+      <div style="overflow-x:auto">
+        <table id="pubTable">
+          <thead><tr><th>Año</th><th>Título</th><th>Revista</th>
+            <th>Autoría</th><th>Estado</th><th>PMID</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h2 class="section">Revistas</h2>
+      <p class="muted" id="journalsList"></p>
+    </div>
+  </section>
+
+  <!-- 3. Ensayos -->
+  <section class="panel" data-tab="Ensayos">
+    <h2 class="section">Ensayos clínicos</h2>
+    <div id="trialsArea"></div>
+  </section>
+
+  <!-- 4. Briefing -->
+  <section class="panel" data-tab="Briefing pre-visita">
+    <div class="card">
+      <h2 class="section">Puntos de conversación</h2>
+      <ul class="clean dot" id="talkingPoints"></ul>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2 class="section">Hacer</h2>
+        <ul class="clean do" id="doList"></ul></div>
+      <div class="card"><h2 class="section">Evitar</h2>
+        <ul class="clean dont" id="dontList"></ul></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2 class="section">Próximos congresos</h2>
+        <ul class="clean dot" id="congressList"></ul></div>
+      <div class="card"><h2 class="section">Checklist</h2>
+        <ul class="clean dot" id="checklist"></ul></div>
+    </div>
+  </section>
+
+  <!-- 5. Inteligencia competitiva -->
+  <section class="panel" data-tab="Inteligencia competitiva">
+    <div class="card">
+      <h2 class="section">Métricas académicas</h2>
+      <table>
+        <tr><td><b>h-index</b> <span class="muted">(set desambiguado)</span></td>
+            <td><b id="hindexVer"></b></td></tr>
+        <tr><td><b>Citas totales</b> <span class="muted">(set desambiguado)</span></td>
+            <td><b id="citationsVer"></b></td></tr>
+        <tr><td>Papers evaluados</td>
+            <td id="papersEval" class="muted"></td></tr>
+        <tr><td>h-index agregado por nombre (Europe PMC)</td>
+            <td><span class="unverified" id="hindex"></span></td></tr>
+        <tr><td>Registros brutos en Europe PMC</td>
+            <td id="epmcHits" class="muted"></td></tr>
+      </table>
+      <p class="notice" id="verifiedNote" style="margin-top:14px"></p>
+      <p class="notice warn" id="metricsNote" style="margin-top:10px"></p>
+    </div>
+    <div class="card">
+      <h2 class="section">Relación e historial (CRM)</h2>
+      <p class="notice">Sin integración CRM: <b>0 interacciones registradas</b>.
+        Tratar como <b>primera toma de contacto</b>.</p>
+    </div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const KOL_DATA = __KOL_DATA__;
+
+(function(){
+  const D = KOL_DATA;
+  const $ = id => document.getElementById(id);
+  // Escapa tambien comillas: esta funcion se usa DENTRO de atributos
+  // (href="...", title="..."), donde escapar solo & < > deja abierta la
+  // salida del atributo.
+  const esc = s => String(s==null?"":s).replace(/[&<>"']/g,
+        c => ({"&":"&amp;","<":"&lt;",">":"&gt;",
+               '"':"&quot;","'":"&#39;"}[c]));
+
+  // ---- Cabecera ----
+  $("avatar").textContent = D.identity.initials || "—";
+  $("kolName").textContent = D.identity.header_name || D.identity.full_name;
+  $("kolInstitution").textContent = D.identity.institution || "";
+  $("kolCity").textContent = D.identity.city
+        ? (D.identity.institution ? " · " : "") + D.identity.city
+          + (D.identity.country ? ", " + D.identity.country : "") : "";
+  $("kolSpecialty").textContent = [D.identity.specialty,
+        D.identity.orcid ? "ORCID: " + D.identity.orcid : ""]
+        .filter(Boolean).join(" · ");
+  $("kolTier").textContent = D.identity.badge.tier;
+  $("kolScore").textContent = D.identity.badge.score;
+
+  // ---- Pestañas ----
+  const panels = [...document.querySelectorAll(".panel")];
+  const bar = $("tabBar");
+  panels.forEach((p,i) => {
+    const b = document.createElement("button");
+    b.textContent = p.dataset.tab;
+    b.onclick = () => {
+      panels.forEach(x => x.classList.remove("active"));
+      [...bar.children].forEach(x => x.classList.remove("active"));
+      p.classList.add("active"); b.classList.add("active");
+    };
+    if(i===0){ p.classList.add("active"); b.classList.add("active"); }
+    bar.appendChild(b);
+  });
+
+  // ---- Perfil científico ----
+  // Todo sale de D.perfil_cientifico, que ya viene calculado en el JSON: el
+  // dashboard NO deduce nada por su cuenta, para no desviarse del PDF.
+  const sci = D.perfil_cientifico || {};
+
+  if(sci.resumen){
+    $("quienEsCard").style.display = "";
+    $("quienEs").textContent = sci.resumen;
+    const esp = sci.especialidad || {};
+    if(esp.origen === "inferida"){
+      $("quienEsNota").textContent =
+        "Área inferida (" + (esp.confianza || "—") + " confianza). " +
+        (esp.detalle || "");
+    }
+  }
+
+  const lineas = sci.lineas_investigacion || [];
+  const recurrentes = lineas.filter(l => l.recurrente);
+  $("lineasTitulo").textContent = recurrentes.length
+      ? "Líneas de investigación" : "Temas tratados";
+  $("lineasNota").textContent = recurrentes.length
+      ? "Temas que repite a lo largo de su obra: son línea de trabajo, no un artículo suelto."
+      : "Ningún descriptor se repite en sus publicaciones: obra temáticamente dispersa. Se listan sus temas más recientes.";
+  $("lineasTabla").querySelector("tbody").innerHTML = lineas.length
+      ? lineas.map(l => `<tr><td>${esc(l.tema)}</td><td>${l.papers}</td>
+          <td>${l.ultimo_anio || "—"}</td></tr>`).join("")
+      : `<tr><td colspan="3" class="muted">Sin descriptores MeSH suficientes.</td></tr>`;
+
+  const tipos = sci.tipos_publicacion || [];
+  $("tiposPub").innerHTML = tipos.length
+      ? tipos.map(t => {
+            const [n, ...resto] = t.texto.split(" ");
+            return `<b>${esc(n)}</b> ${esc(resto.join(" "))}`;
+        }).join(" · ")
+      : "Sin tipos de publicación indexados.";
+
+  const colabs = sci.colaboradores || [];
+  $("colabTabla").querySelector("tbody").innerHTML = colabs.length
+      ? colabs.map(c => `<tr><td>${esc(c.nombre)}</td><td>${c.papers}</td></tr>`).join("")
+      : `<tr><td colspan="2" class="muted">Sin coautores recurrentes.</td></tr>`;
+
+  const tray = sci.trayectoria || {};
+  const anios = tray.por_anio || [];
+  if(anios.length){
+    const maxA = Math.max(...anios.map(a => a.papers)) || 1;
+    $("actividad").innerHTML = anios.map(a => `
+      <div style="display:flex;align-items:center;gap:10px;margin:3px 0">
+        <span class="muted" style="width:42px;font-size:12.5px">${a.anio}</span>
+        <span style="flex:1;background:#eee;border-radius:4px;height:10px">
+          <span style="display:block;height:10px;border-radius:4px;
+            background:var(--teal);width:${Math.round(100*a.papers/maxA)}%"></span>
+        </span>
+        <span class="muted" style="width:26px;font-size:12.5px">${a.papers||""}</span>
+      </div>`).join("");
+  } else {
+    $("actividad").innerHTML = `<p class="muted">Sin años de publicación.</p>`;
+  }
+
+  // ---- Aviso de cobertura ----
+  // Si el set esta truncado, la biografia (primer ano, media anual, total)
+  // describe solo una parte de la obra. Decirlo, no dar la cifra recortada
+  // como si fuera completa.
+  const cov = D.coverage;
+  if (cov && cov.truncado) {
+    $("coverageNote").style.display = "";
+    $("coverageNote").textContent =
+      `Cobertura parcial: PubMed tiene ${cov.total_en_pubmed} trabajos para `
+      + `esta consulta y se han analizado los ${cov.analizados} más `
+      + `recientes (tope ${cov.tope}). El año de inicio, la media anual y los `
+      + `totales se refieren solo a ese subconjunto.`;
+  }
+
+  // ---- KPIs resumen ----
+  const pub = D.publications, sc = D.score;
+  const nTrials = D.trials ? D.trials.verified_count : 0;
+  const kpi = (v,l) => `<div class="kpi"><div class="val">${v}</div>
+        <div class="lbl">${l}</div></div>`;
+  $("kpis").innerHTML =
+      kpi(pub.verified_count, "Publicaciones verificadas")
+    + kpi(pub.recent_5y, "Recientes (5 años)")
+    + kpi((pub.journals||[]).length, "Revistas")
+    + kpi(nTrials, "Ensayos verificados")
+    + kpi(pub.excluded_count, "Homónimos excluidos");
+
+  // ---- Medidor de score ----
+  $("scoreBar").style.width = sc.total + "%";
+  $("scoreLine").textContent = `${sc.total}/100 · ${sc.tier}`;
+  const maxes = {publications:40,trials:20,influence:15,
+        therapeutic_relevance:15,crm:10};
+  const nice = {publications:"Publicaciones",trials:"Ensayos",
+        influence:"Influencia",therapeutic_relevance:"Relevancia terap.",
+        crm:"CRM"};
+  const excl = sc.excluded || {};
+  $("breakdown").innerHTML = Object.entries(sc.breakdown).map(([k,v]) => {
+    const pct = Math.round(100*v/(maxes[k]||1));
+    // Un componente excluido no se puede medir: ni suma ni resta, y se dice.
+    const fuera = Object.prototype.hasOwnProperty.call(excl, k);
+    const etiqueta = fuera
+      ? `<span class="bd-val muted" title="${esc(excl[k])}">no computa</span>`
+      : `<span class="bd-val">${v}/${maxes[k]}</span>`;
+    return `<div class="bd-row" style="${fuera?"opacity:.5":""}">
+      <span>${nice[k]||k}</span>
+      <span class="bd-bar"><span style="width:${fuera?0:pct}%"></span></span>
+      ${etiqueta}</div>`;
+  }).join("");
+  if (Object.keys(excl).length) {
+    $("scoreLine").textContent += " · sobre "
+      + (sc.counted||[]).map(k => nice[k]||k).join(", ");
+  }
+
+  // ---- Desambiguación ----
+  const conf = D.disambiguation.confidence || "";
+  $("confidence").textContent = conf.toUpperCase();
+  $("confidence").className = "conf " + conf;
+  $("disambNotes").textContent = D.disambiguation.notes || "";
+  $("queryUsed").textContent = D.disambiguation.query_used || "";
+
+  // ---- Publicaciones ----
+  $("pubKpis").innerHTML =
+      kpi(pub.count, "Total atribuidas")
+    + kpi(pub.verified_count, "Verificadas")
+    + kpi(pub.unverified_count, "Sin verificar")
+    + kpi(pub.first_last_author_count, "1º/último autor")
+    + kpi(pub.excluded_count, "Excluidas (homónimos)");
+  if(pub.unverified_count>0){
+    $("pubNote").innerHTML = `<p class="notice">Hay
+      ${pub.unverified_count} publicación(es) <b>sin verificar</b>: el autor
+      coincide pero no se pudo confirmar la afiliación.</p>`;
+  }
+  $("pubTable").querySelector("tbody").innerHTML = (pub.items||[]).map(it => `
+    <tr>
+      <td>${esc(it.year)}</td>
+      <td>${esc(it.title)}</td>
+      <td class="muted">${esc(it.journal)}</td>
+      <td class="pos">${esc(it.author_position)}</td>
+      <td>${it.verified
+            ? '<span class="pill ok">verificado</span>'
+            : '<span class="pill na">sin verificar</span>'}</td>
+      <td><a href="https://pubmed.ncbi.nlm.nih.gov/${esc(it.pmid)}/"
+             target="_blank" rel="noopener">${esc(it.pmid)}</a></td>
+    </tr>`).join("") ||
+    `<tr><td colspan="6" class="muted">Sin publicaciones verificadas.</td></tr>`;
+  $("journalsList").textContent = (pub.journals||[]).join(" · ") || "—";
+
+  // ---- Ensayos ----
+  if(!D.trials){
+    $("trialsArea").innerHTML = `<div class="card">
+      <p class="notice warn"><b>0 ensayos verificados</b> contra la
+      localización del KOL. Es un resultado <b>válido</b>: ningún ensayo de
+      ClinicalTrials.gov con este apellido se confirmó en la ciudad/institución
+      indicadas, así que no se atribuye trabajo de posibles homónimos.</p>
+    </div>`;
+  } else {
+    const rows = D.trials.items.map(t => `
+      <tr><td><a href="https://clinicaltrials.gov/study/${esc(t.nct)}"
+            target="_blank" rel="noopener">${esc(t.nct)}</a></td>
+        <td>${esc(t.title)}</td><td>${esc(t.phase)}</td>
+        <td>${esc(t.role)}</td><td class="muted">${esc(t.location)}</td></tr>`
+    ).join("");
+    $("trialsArea").innerHTML = `<div class="card">
+      <p>${D.trials.verified_count} ensayo(s) verificado(s) por localización.</p>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>NCT</th><th>Título</th><th>Fase</th><th>Rol</th>
+          <th>Sede</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  }
+
+  // ---- Briefing ----
+  const fill = (id, arr, render) =>
+    $(id).innerHTML = (arr||[]).map(render).join("");
+  fill("talkingPoints", D.briefing.talking_points, x => `<li>${esc(x)}</li>`);
+  fill("doList", D.briefing.do, x => `<li>${esc(x)}</li>`);
+  fill("dontList", D.briefing.dont, x => `<li>${esc(x)}</li>`);
+  fill("congressList", D.briefing.next_congresses,
+       c => `<li>${esc(c.name)} <span class="muted">— ${esc(c.note)}</span></li>`);
+  fill("checklist", D.briefing.checklist, x => `<li>${esc(x)}</li>`);
+
+  // ---- Inteligencia competitiva ----
+  const m = D.metrics_unverified;
+  const mv = D.metrics_verified;
+  if (mv) {
+    // h-index calculado por nosotros sobre los papers ya filtrados de
+    // homónimos: atribuible, a diferencia del agregado por nombre.
+    $("hindexVer").textContent = mv.hindex;
+    $("citationsVer").textContent = (mv.citations||0).toLocaleString("es-ES");
+    const base = (mv.papers_verificados == null) ? ""
+      : ` (${mv.papers_verificados} verificados, `
+        + `${mv.papers_sin_verificar} sin verificar)`;
+    $("papersEval").textContent = `${mv.papers_evaluados} papers${base} `
+      + `· máx. ${mv.max_citas} citas en un solo trabajo`;
+    $("verifiedNote").textContent = mv.note || "";
+  } else {
+    ["hindexVer","citationsVer"].forEach(id => {
+      $(id).textContent = "NO DISPONIBLE";
+      $(id).className = "unverified";
+    });
+    $("papersEval").textContent = "—";
+    $("verifiedNote").textContent = "No se pudieron obtener las citas por "
+      + "artículo desde Europe PMC en esta ejecución.";
+  }
+  $("hindex").textContent = m.hindex_europepmc;
+  $("epmcHits").textContent = (m.epmc_raw_hits==null?"—":m.epmc_raw_hits)
+        + " (sin desambiguar)";
+  $("metricsNote").textContent = m.note || "";
+
+  // ---- Footer ----
+  const v = D.verification_note;
+  $("footer").innerHTML = `Fuentes: ${(v.sources||[]).join(" · ")}<br>
+    ${esc(v.trial_note||"")}<br>
+    Generado el ${esc(v.date)} · KOL Intelligence System`;
+})();
+</script>
+</body>
+</html>
