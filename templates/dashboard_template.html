@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -131,9 +131,9 @@
 
 <div class="wrap">
   <!-- 1. Resumen -->
-  <section class="panel" data-tab="Resumen">
+  <section class="panel" data-tab="Summary">
     <div class="card" id="quienEsCard" style="display:none">
-      <h2 class="section">Quién es</h2>
+      <h2 class="section">Who they are</h2>
       <p id="quienEs"></p>
       <p class="muted" id="quienEsNota" style="font-size:12.5px"></p>
       <p class="notice warn" id="coverageNote" style="display:none"></p>
@@ -146,77 +146,77 @@
       <div class="breakdown" id="breakdown"></div>
     </div>
     <div class="card">
-      <h2 class="section">Desambiguación</h2>
-      <p>Confianza: <span id="confidence" class="conf"></span></p>
+      <h2 class="section">Disambiguation</h2>
+      <p>Confidence: <span id="confidence" class="conf"></span></p>
       <p class="muted" id="disambNotes"></p>
-      <p class="muted" style="font-size:12.5px">Query PubMed:
+      <p class="muted" style="font-size:12.5px">PubMed query:
         <code id="queryUsed"></code></p>
     </div>
   </section>
 
   <!-- 2. Perfil científico -->
-  <section class="panel" data-tab="Perfil científico">
+  <section class="panel" data-tab="Scientific profile">
     <div class="card">
-      <h2 class="section" id="lineasTitulo">Líneas de investigación</h2>
+      <h2 class="section" id="lineasTitulo">Research lines</h2>
       <p class="muted" id="lineasNota"></p>
-      <table id="lineasTabla"><thead><tr><th>Tema (descriptor MeSH)</th>
-        <th>Trabajos</th><th>Último</th></tr></thead><tbody></tbody></table>
+      <table id="lineasTabla"><thead><tr><th>Topic (MeSH descriptor)</th>
+        <th>Papers</th><th>Latest</th></tr></thead><tbody></tbody></table>
     </div>
     <div class="card">
-      <h2 class="section">Tipo de evidencia que produce</h2>
+      <h2 class="section">Type of evidence produced</h2>
       <p id="tiposPub" class="muted"></p>
     </div>
     <div class="card">
-      <h2 class="section">Coautores habituales</h2>
-      <table id="colabTabla"><thead><tr><th>Coautor</th>
-        <th>Trabajos en común</th></tr></thead><tbody></tbody></table>
+      <h2 class="section">Frequent co-authors</h2>
+      <table id="colabTabla"><thead><tr><th>Co-author</th>
+        <th>Joint papers</th></tr></thead><tbody></tbody></table>
     </div>
     <div class="card">
-      <h2 class="section">Actividad por año</h2>
+      <h2 class="section">Activity by year</h2>
       <div id="actividad"></div>
     </div>
   </section>
 
   <!-- 3. Publicaciones -->
-  <section class="panel" data-tab="Publicaciones">
+  <section class="panel" data-tab="Publications">
     <div class="kpis" id="pubKpis"></div>
     <div class="card">
-      <h2 class="section">Publicaciones verificadas</h2>
+      <h2 class="section">Verified publications</h2>
       <div id="pubNote"></div>
       <div style="overflow-x:auto">
         <table id="pubTable">
-          <thead><tr><th>Año</th><th>Título</th><th>Revista</th>
-            <th>Autoría</th><th>Estado</th><th>PMID</th></tr></thead>
+          <thead><tr><th>Year</th><th>Title</th><th>Journal</th>
+            <th>Authorship</th><th>Status</th><th>PMID</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
     </div>
     <div class="card">
-      <h2 class="section">Revistas</h2>
+      <h2 class="section">Journals</h2>
       <p class="muted" id="journalsList"></p>
     </div>
   </section>
 
   <!-- 3. Ensayos -->
-  <section class="panel" data-tab="Ensayos">
-    <h2 class="section">Ensayos clínicos</h2>
+  <section class="panel" data-tab="Trials">
+    <h2 class="section">Clinical trials</h2>
     <div id="trialsArea"></div>
   </section>
 
   <!-- 4. Briefing -->
-  <section class="panel" data-tab="Briefing pre-visita">
+  <section class="panel" data-tab="Pre-visit briefing">
     <div class="card">
-      <h2 class="section">Puntos de conversación</h2>
+      <h2 class="section">Talking points</h2>
       <ul class="clean dot" id="talkingPoints"></ul>
     </div>
     <div class="grid2">
-      <div class="card"><h2 class="section">Hacer</h2>
+      <div class="card"><h2 class="section">Do</h2>
         <ul class="clean do" id="doList"></ul></div>
-      <div class="card"><h2 class="section">Evitar</h2>
+      <div class="card"><h2 class="section">Avoid</h2>
         <ul class="clean dont" id="dontList"></ul></div>
     </div>
     <div class="grid2">
-      <div class="card"><h2 class="section">Próximos congresos</h2>
+      <div class="card"><h2 class="section">Upcoming congresses</h2>
         <ul class="clean dot" id="congressList"></ul></div>
       <div class="card"><h2 class="section">Checklist</h2>
         <ul class="clean dot" id="checklist"></ul></div>
@@ -224,28 +224,28 @@
   </section>
 
   <!-- 5. Inteligencia competitiva -->
-  <section class="panel" data-tab="Inteligencia competitiva">
+  <section class="panel" data-tab="Competitive intelligence">
     <div class="card">
-      <h2 class="section">Métricas académicas</h2>
+      <h2 class="section">Academic metrics</h2>
       <table>
-        <tr><td><b>h-index</b> <span class="muted">(set desambiguado)</span></td>
+        <tr><td><b>h-index</b> <span class="muted">(disambiguated set)</span></td>
             <td><b id="hindexVer"></b></td></tr>
-        <tr><td><b>Citas totales</b> <span class="muted">(set desambiguado)</span></td>
+        <tr><td><b>Total citations</b> <span class="muted">(disambiguated set)</span></td>
             <td><b id="citationsVer"></b></td></tr>
-        <tr><td>Papers evaluados</td>
+        <tr><td>Papers assessed</td>
             <td id="papersEval" class="muted"></td></tr>
-        <tr><td>h-index agregado por nombre (Europe PMC)</td>
+        <tr><td>h-index aggregated by name (Europe PMC)</td>
             <td><span class="unverified" id="hindex"></span></td></tr>
-        <tr><td>Registros brutos en Europe PMC</td>
+        <tr><td>Raw records in Europe PMC</td>
             <td id="epmcHits" class="muted"></td></tr>
       </table>
       <p class="notice" id="verifiedNote" style="margin-top:14px"></p>
       <p class="notice warn" id="metricsNote" style="margin-top:10px"></p>
     </div>
     <div class="card">
-      <h2 class="section">Relación e historial (CRM)</h2>
-      <p class="notice">Sin integración CRM: <b>0 interacciones registradas</b>.
-        Tratar como <b>primera toma de contacto</b>.</p>
+      <h2 class="section">Relationship and history (CRM)</h2>
+      <p class="notice">No CRM integration: <b>0 interactions on record</b>.
+        Treat as a <b>first contact</b>.</p>
     </div>
   </section>
 
@@ -304,7 +304,7 @@ const KOL_DATA = __KOL_DATA__;
     const esp = sci.especialidad || {};
     if(esp.origen === "inferida"){
       $("quienEsNota").textContent =
-        "Área inferida (" + (esp.confianza || "—") + " confianza). " +
+        "Field inferred (confidence: " + (esp.confianza || "—") + "). " +
         (esp.detalle || "");
     }
   }
@@ -312,14 +312,14 @@ const KOL_DATA = __KOL_DATA__;
   const lineas = sci.lineas_investigacion || [];
   const recurrentes = lineas.filter(l => l.recurrente);
   $("lineasTitulo").textContent = recurrentes.length
-      ? "Líneas de investigación" : "Temas tratados";
+      ? "Research lines" : "Topics covered";
   $("lineasNota").textContent = recurrentes.length
-      ? "Temas que repite a lo largo de su obra: son línea de trabajo, no un artículo suelto."
-      : "Ningún descriptor se repite en sus publicaciones: obra temáticamente dispersa. Se listan sus temas más recientes.";
+      ? "Topics they return to across their work: a line of research, not a one-off paper."
+      : "No descriptor repeats across their publications: a thematically scattered body of work. Most recent topics listed.";
   $("lineasTabla").querySelector("tbody").innerHTML = lineas.length
       ? lineas.map(l => `<tr><td>${esc(l.tema)}</td><td>${l.papers}</td>
           <td>${l.ultimo_anio || "—"}</td></tr>`).join("")
-      : `<tr><td colspan="3" class="muted">Sin descriptores MeSH suficientes.</td></tr>`;
+      : `<tr><td colspan="3" class="muted">Not enough MeSH descriptors.</td></tr>`;
 
   const tipos = sci.tipos_publicacion || [];
   $("tiposPub").innerHTML = tipos.length
@@ -327,12 +327,12 @@ const KOL_DATA = __KOL_DATA__;
             const [n, ...resto] = t.texto.split(" ");
             return `<b>${esc(n)}</b> ${esc(resto.join(" "))}`;
         }).join(" · ")
-      : "Sin tipos de publicación indexados.";
+      : "No indexed publication types.";
 
   const colabs = sci.colaboradores || [];
   $("colabTabla").querySelector("tbody").innerHTML = colabs.length
       ? colabs.map(c => `<tr><td>${esc(c.nombre)}</td><td>${c.papers}</td></tr>`).join("")
-      : `<tr><td colspan="2" class="muted">Sin coautores recurrentes.</td></tr>`;
+      : `<tr><td colspan="2" class="muted">No recurring co-authors.</td></tr>`;
 
   const tray = sci.trayectoria || {};
   const anios = tray.por_anio || [];
@@ -348,7 +348,7 @@ const KOL_DATA = __KOL_DATA__;
         <span class="muted" style="width:26px;font-size:12.5px">${a.papers||""}</span>
       </div>`).join("");
   } else {
-    $("actividad").innerHTML = `<p class="muted">Sin años de publicación.</p>`;
+    $("actividad").innerHTML = `<p class="muted">No publication years.</p>`;
   }
 
   // ---- Aviso de cobertura ----
@@ -359,10 +359,10 @@ const KOL_DATA = __KOL_DATA__;
   if (cov && cov.truncado) {
     $("coverageNote").style.display = "";
     $("coverageNote").textContent =
-      `Cobertura parcial: PubMed tiene ${cov.total_en_pubmed} trabajos para `
-      + `esta consulta y se han analizado los ${cov.analizados} más `
-      + `recientes (tope ${cov.tope}). El año de inicio, la media anual y los `
-      + `totales se refieren solo a ese subconjunto.`;
+      `Partial coverage: PubMed holds ${cov.total_en_pubmed} papers for this `
+      + `query and the ${cov.analizados} most recent were analysed `
+      + `(cap ${cov.tope}). The starting year, the yearly average and the `
+      + `totals describe only that subset.`;
   }
 
   // ---- KPIs resumen ----
@@ -371,19 +371,19 @@ const KOL_DATA = __KOL_DATA__;
   const kpi = (v,l) => `<div class="kpi"><div class="val">${v}</div>
         <div class="lbl">${l}</div></div>`;
   $("kpis").innerHTML =
-      kpi(pub.verified_count, "Publicaciones verificadas")
-    + kpi(pub.recent_5y, "Recientes (5 años)")
-    + kpi((pub.journals||[]).length, "Revistas")
-    + kpi(nTrials, "Ensayos verificados")
-    + kpi(pub.excluded_count, "Homónimos excluidos");
+      kpi(pub.verified_count, "Verified publications")
+    + kpi(pub.recent_5y, "Recent (5 yrs)")
+    + kpi((pub.journals||[]).length, "Journals")
+    + kpi(nTrials, "Verified trials")
+    + kpi(pub.excluded_count, "Homonyms excluded");
 
   // ---- Medidor de score ----
   $("scoreBar").style.width = sc.total + "%";
   $("scoreLine").textContent = `${sc.total}/100 · ${sc.tier}`;
   const maxes = {publications:40,trials:20,influence:15,
         therapeutic_relevance:15,crm:10};
-  const nice = {publications:"Publicaciones",trials:"Ensayos",
-        influence:"Influencia",therapeutic_relevance:"Relevancia terap.",
+  const nice = {publications:"Publications",trials:"Trials",
+        influence:"Influence",therapeutic_relevance:"Therap. relevance",
         crm:"CRM"};
   const excl = sc.excluded || {};
   $("breakdown").innerHTML = Object.entries(sc.breakdown).map(([k,v]) => {
@@ -391,7 +391,7 @@ const KOL_DATA = __KOL_DATA__;
     // Un componente excluido no se puede medir: ni suma ni resta, y se dice.
     const fuera = Object.prototype.hasOwnProperty.call(excl, k);
     const etiqueta = fuera
-      ? `<span class="bd-val muted" title="${esc(excl[k])}">no computa</span>`
+      ? `<span class="bd-val muted" title="${esc(excl[k])}">not scored</span>`
       : `<span class="bd-val">${v}/${maxes[k]}</span>`;
     return `<div class="bd-row" style="${fuera?"opacity:.5":""}">
       <span>${nice[k]||k}</span>
@@ -399,7 +399,7 @@ const KOL_DATA = __KOL_DATA__;
       ${etiqueta}</div>`;
   }).join("");
   if (Object.keys(excl).length) {
-    $("scoreLine").textContent += " · sobre "
+    $("scoreLine").textContent += " · over "
       + (sc.counted||[]).map(k => nice[k]||k).join(", ");
   }
 
@@ -412,15 +412,15 @@ const KOL_DATA = __KOL_DATA__;
 
   // ---- Publicaciones ----
   $("pubKpis").innerHTML =
-      kpi(pub.count, "Total atribuidas")
-    + kpi(pub.verified_count, "Verificadas")
-    + kpi(pub.unverified_count, "Sin verificar")
-    + kpi(pub.first_last_author_count, "1º/último autor")
-    + kpi(pub.excluded_count, "Excluidas (homónimos)");
+      kpi(pub.count, "Total attributed")
+    + kpi(pub.verified_count, "Verified")
+    + kpi(pub.unverified_count, "Unverified")
+    + kpi(pub.first_last_author_count, "1st/last author")
+    + kpi(pub.excluded_count, "Excluded (homonyms)");
   if(pub.unverified_count>0){
-    $("pubNote").innerHTML = `<p class="notice">Hay
-      ${pub.unverified_count} publicación(es) <b>sin verificar</b>: el autor
-      coincide pero no se pudo confirmar la afiliación.</p>`;
+    $("pubNote").innerHTML = `<p class="notice">There are
+      ${pub.unverified_count} <b>unverified</b> publication(s): the author
+      matches but the affiliation could not be confirmed.</p>`;
   }
   $("pubTable").querySelector("tbody").innerHTML = (pub.items||[]).map(it => `
     <tr>
@@ -429,21 +429,21 @@ const KOL_DATA = __KOL_DATA__;
       <td class="muted">${esc(it.journal)}</td>
       <td class="pos">${esc(it.author_position)}</td>
       <td>${it.verified
-            ? '<span class="pill ok">verificado</span>'
-            : '<span class="pill na">sin verificar</span>'}</td>
+            ? '<span class="pill ok">verified</span>'
+            : '<span class="pill na">unverified</span>'}</td>
       <td><a href="https://pubmed.ncbi.nlm.nih.gov/${esc(it.pmid)}/"
              target="_blank" rel="noopener">${esc(it.pmid)}</a></td>
     </tr>`).join("") ||
-    `<tr><td colspan="6" class="muted">Sin publicaciones verificadas.</td></tr>`;
+    `<tr><td colspan="6" class="muted">No verified publications.</td></tr>`;
   $("journalsList").textContent = (pub.journals||[]).join(" · ") || "—";
 
   // ---- Ensayos ----
   if(!D.trials){
     $("trialsArea").innerHTML = `<div class="card">
-      <p class="notice warn"><b>0 ensayos verificados</b> contra la
-      localización del KOL. Es un resultado <b>válido</b>: ningún ensayo de
-      ClinicalTrials.gov con este apellido se confirmó en la ciudad/institución
-      indicadas, así que no se atribuye trabajo de posibles homónimos.</p>
+      <p class="notice warn"><b>0 verified trials</b> against the KOL's
+      location. This is a <b>valid</b> result: no ClinicalTrials.gov study
+      under this surname was confirmed at the given city/institution, so no
+      work by possible homonyms is attributed to them.</p>
     </div>`;
   } else {
     const rows = D.trials.items.map(t => `
@@ -453,10 +453,10 @@ const KOL_DATA = __KOL_DATA__;
         <td>${esc(t.role)}</td><td class="muted">${esc(t.location)}</td></tr>`
     ).join("");
     $("trialsArea").innerHTML = `<div class="card">
-      <p>${D.trials.verified_count} ensayo(s) verificado(s) por localización.</p>
+      <p>${D.trials.verified_count} trial(s) verified by location.</p>
       <div style="overflow-x:auto"><table>
-        <thead><tr><th>NCT</th><th>Título</th><th>Fase</th><th>Rol</th>
-          <th>Sede</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+        <thead><tr><th>NCT</th><th>Title</th><th>Phase</th><th>Role</th>
+          <th>Site</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
   }
 
   // ---- Briefing ----
@@ -476,32 +476,32 @@ const KOL_DATA = __KOL_DATA__;
     // h-index calculado por nosotros sobre los papers ya filtrados de
     // homónimos: atribuible, a diferencia del agregado por nombre.
     $("hindexVer").textContent = mv.hindex;
-    $("citationsVer").textContent = (mv.citations||0).toLocaleString("es-ES");
+    $("citationsVer").textContent = (mv.citations||0).toLocaleString("en-GB");
     const base = (mv.papers_verificados == null) ? ""
-      : ` (${mv.papers_verificados} verificados, `
-        + `${mv.papers_sin_verificar} sin verificar)`;
+      : ` (${mv.papers_verificados} verified, `
+        + `${mv.papers_sin_verificar} unverified)`;
     $("papersEval").textContent = `${mv.papers_evaluados} papers${base} `
-      + `· máx. ${mv.max_citas} citas en un solo trabajo`;
+      + `· max. ${mv.max_citas} citations on a single paper`;
     $("verifiedNote").textContent = mv.note || "";
   } else {
     ["hindexVer","citationsVer"].forEach(id => {
-      $(id).textContent = "NO DISPONIBLE";
+      $(id).textContent = "NOT AVAILABLE";
       $(id).className = "unverified";
     });
     $("papersEval").textContent = "—";
-    $("verifiedNote").textContent = "No se pudieron obtener las citas por "
-      + "artículo desde Europe PMC en esta ejecución.";
+    $("verifiedNote").textContent = "Per-article citations could not be "
+      + "retrieved from Europe PMC on this run.";
   }
   $("hindex").textContent = m.hindex_europepmc;
   $("epmcHits").textContent = (m.epmc_raw_hits==null?"—":m.epmc_raw_hits)
-        + " (sin desambiguar)";
+        + " (not disambiguated)";
   $("metricsNote").textContent = m.note || "";
 
   // ---- Footer ----
   const v = D.verification_note;
-  $("footer").innerHTML = `Fuentes: ${(v.sources||[]).join(" · ")}<br>
+  $("footer").innerHTML = `Sources: ${(v.sources||[]).join(" · ")}<br>
     ${esc(v.trial_note||"")}<br>
-    Generado el ${esc(v.date)} · KOL Intelligence System`;
+    Generated on ${esc(v.date)} · KOL Intelligence System`;
 })();
 </script>
 </body>

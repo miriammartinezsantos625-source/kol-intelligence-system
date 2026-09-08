@@ -85,8 +85,12 @@ def test_el_ajuste_conserva_el_maximo_detalle_que_quepa(tmp_path):
     perfil = _perfil(n_papers=3, n_ensayos=0, n_anios=2)
     texto = "\n".join(p.extract_text() or ""
                       for p in PdfReader(pdf.render_pdf(perfil, str(tmp_path))).pages)
-    assert "Coautores habituales" in texto
-    assert "Actividad por año" in texto
+    # Los rotulos, en ingles, son inequivocos. Ojo: "Coautores habituales"
+    # NO sirve para esto — profile.py genera un punto de conversacion que
+    # empieza con esas mismas palabras, asi que el assert pasaba aunque la
+    # seccion de la pagina 4 no se hubiera dibujado.
+    assert "Frequent co-authors" in texto
+    assert "Activity by year" in texto
 
 
 # ----------------------------------------------------------------------

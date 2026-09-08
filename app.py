@@ -63,7 +63,7 @@ AUTORA = "Miriam Martínez Santos, PhD"
 # Pie de autoria. Va en TODAS las pantallas, tambien en la de error: si algo
 # falla, la firma sigue siendo la misma.
 FOOTER = """
-<div class="pie">KOL Intelligence System · creado por """ + AUTORA + """</div>
+<div class="pie">KOL Intelligence System · created by """ + AUTORA + """</div>
 """
 
 FOOTER_CSS = """
@@ -84,32 +84,32 @@ OVERLAY_CSS = """
 """
 
 FORM_PAGE = """
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KOL Intelligence System</title><style>""" + BASE_CSS + FOOTER_CSS + OVERLAY_CSS + """
 </style></head><body>
 <div class="top"><h1>KOL Intelligence System</h1>
-  <div class="sub">Perfil 360° de un Key Opinion Leader médico</div></div>
+  <div class="sub">360° profile of a medical Key Opinion Leader</div></div>
 <div class="wrap"><div class="card">
   <form method="POST" action="/buscar"
         onsubmit="document.getElementById('overlay').style.display='flex'">
-    <label>Nombre del médico <span class="req">*</span></label>
+    <label>Doctor's name <span class="req">*</span></label>
     <input name="nombre" required autofocus autocomplete="off">
 
-    <button type="submit">Buscar médico</button>
+    <button type="submit">Find doctor</button>
   </form>
 </div></div>
 """ + FOOTER + """
 <div id="overlay"><div class="spin"></div>
-  <div><b>Buscando en PubMed…</b><br>Localizando desde qué centros publica
-  ese nombre.</div></div>
+  <div><b>Searching PubMed…</b><br>Finding which centres that name
+  publishes from.</div></div>
 </body></html>
 """
 
 CANDIDATOS_PAGE = """
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>¿Cuál de estos? — {{ nombre }}</title>
+<title>Which one? — {{ nombre }}</title>
 <style>""" + BASE_CSS + FOOTER_CSS + OVERLAY_CSS + """
   .cand{display:flex;gap:14px;align-items:center;justify-content:space-between;
         border:1px solid var(--line);border-radius:12px;padding:16px 18px;
@@ -131,19 +131,19 @@ CANDIDATOS_PAGE = """
   .volver{display:inline-block;margin-top:6px;color:var(--muted);font-size:13px}
 </style></head><body>
 <div class="top"><h1>{{ nombre }}</h1>
-  <div class="sub">¿Cuál de estos es? Elige el centro donde trabaja</div></div>
+  <div class="sub">Which one is it? Pick the centre where they work</div></div>
 <div class="wrap">
 
   {% if candidatos %}
   <div class="aviso">
-    Estos son los centros desde los que firma alguien con ese apellido e
-    inicial. <b>Si hay varios, puede ser la misma persona en distintas etapas
-    o personas distintas</b> — por eso lo eliges tú. El nombre de cada ficha
-    es el que consta en PubMed, así que <b>da igual cómo lo hayas escrito tú</b>:
-    el dossier saldrá con la forma correcta. Base: los
-    <b>{{ papers_analizados }}</b> artículos más recientes
-    {% if total_pubmed > papers_analizados %}de los <b>{{ total_pubmed }}</b>
-    que PubMed tiene con ese nombre{% endif %}.
+    These are the centres someone with that surname and initial signs from.
+    <b>If there is more than one, it may be the same person at different
+    stages, or different people</b> — which is why you pick. The name on each
+    card is the one recorded in PubMed, so <b>it does not matter how you typed
+    it</b>: the dossier will use the correct form. Based on the
+    <b>{{ papers_analizados }}</b> most recent papers
+    {% if total_pubmed > papers_analizados %}out of the <b>{{ total_pubmed }}</b>
+    PubMed holds under that name{% endif %}.
   </div>
 
   {% for c in candidatos %}
@@ -156,9 +156,9 @@ CANDIDATOS_PAGE = """
         {% if c.primer_anio %}{{ c.primer_anio }}–{{ c.ultimo_anio }}{% endif %}
       </div>
       {% if c.otros_nombres %}
-      <div class="ojo">Ahí también firma
-        {{ c.otros_nombres|join(', ') }} — mismo apellido e inicial, pero
-        <b>otra persona</b>: esos artículos no son suyos.</div>
+      <div class="ojo">{{ c.otros_nombres|join(', ') }} also signs from
+        there — same surname and initial, but a <b>different person</b>:
+        those papers are not theirs.</div>
       {% endif %}
       {% if c.ejemplo %}<div class="ej">«{{ c.ejemplo }}»</div>{% endif %}
     </div>
@@ -167,60 +167,61 @@ CANDIDATOS_PAGE = """
       <input type="hidden" name="nombre" value="{{ c.nombre or nombre }}">
       <input type="hidden" name="institucion" value="{{ c.etiqueta }}">
       <input type="hidden" name="apellidos" value="{{ apellidos or '' }}">
-      <button type="submit">Es este</button>
+      <button type="submit">This is them</button>
     </form>
   </div>
   {% endfor %}
   {% else %}
   <div class="aviso">
-    <b>PubMed no devuelve ningún centro para ese nombre.</b>
-    {% if total_pubmed %}Hay {{ total_pubmed }} artículos con ese apellido e
-    inicial, pero ninguno lleva una afiliación reconocible.{% else %}
-    No hay artículos con ese apellido e inicial: revisa cómo lo has escrito.
-    {% endif %} Puedes escribir el centro a mano aquí abajo.
+    <b>PubMed returns no centre for that name.</b>
+    {% if total_pubmed %}There are {{ total_pubmed }} papers with that surname
+    and initial, but none carries a recognisable affiliation.{% else %}
+    There are no papers with that surname and initial: check the spelling.
+    {% endif %} You can type the centre by hand below.
   </div>
   {% endif %}
 
   {% if omitidos %}
-  <div class="aviso">Se omiten <b>{{ omitidos }}</b> centros más, todos con
-    menos publicaciones que los de arriba. Si el que buscas no está,
-    escríbelo a mano aquí abajo.</div>
+  <div class="aviso"><b>{{ omitidos }}</b> further centres are omitted, all
+    with fewer publications than those above. If the one you want is missing,
+    type it by hand below.</div>
   {% endif %}
 
   <div class="card">
     <details {% if not candidatos %}open{% endif %}>
-      <summary>Ninguno es / escribir el centro a mano</summary>
+      <summary>None of these / type the centre by hand</summary>
       <form method="POST" action="/generar"
             onsubmit="document.getElementById('overlay').style.display='flex'">
         <input type="hidden" name="nombre" value="{{ nombre }}">
-        <label>Dónde trabaja</label>
+        <label>Where they work</label>
         <input name="institucion" autocomplete="off">
-        <div class="hint">Déjalo vacío para analizarlo <b>sin centro</b>: sale
-          igualmente, pero la confianza será <b>baja</b> y puede mezclar
-          homónimos.</div>
+        <div class="hint">Leave it empty to analyse <b>with no centre</b>: it
+          still works, but confidence will be <b>low</b> and homonyms may get
+          mixed in.</div>
         <div class="row">
           <div><label>ORCID</label><input name="orcid" autocomplete="off">
-            <div class="hint">Lo único que sube la confianza a «alta».</div></div>
-          <div><label>Apellido(s)</label>
+            <div class="hint">The only input that raises confidence to
+              «high».</div></div>
+          <div><label>Surname(s)</label>
             <input name="apellidos" value="{{ apellidos or '' }}"
                    autocomplete="off">
-            <div class="hint">Solo si el nombre de pila es compuesto.</div></div>
+            <div class="hint">Only if the given name is compound.</div></div>
         </div>
-        <button type="submit">Generar perfil</button>
+        <button type="submit">Generate profile</button>
       </form>
     </details>
-    <a class="volver" href="/">← Buscar otro nombre</a>
+    <a class="volver" href="/">← Search another name</a>
   </div>
 </div>
 """ + FOOTER + """
 <div id="overlay"><div class="spin"></div>
-  <div><b>Generando perfil…</b><br>Consultando PubMed, ClinicalTrials.gov y
-  Europe PMC. Puede tardar unos segundos.</div></div>
+  <div><b>Building profile…</b><br>Querying PubMed, ClinicalTrials.gov and
+  Europe PMC. This can take a few seconds.</div></div>
 </body></html>
 """
 
 RESULT_PAGE = """
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KOL — {{ nombre }}</title><style>""" + BASE_CSS + FOOTER_CSS + """
   .bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;
@@ -241,41 +242,41 @@ RESULT_PAGE = """
 <div class="top"><div class="bar" style="max-width:1160px;margin:0 auto">
   <div><h1>{{ nombre }}</h1>
     <div class="sub">KOL Score {{ score }}/100 · {{ tier }} ·
-      confianza {{ confidence }}</div></div>
+      confidence {{ confidence }}</div></div>
   <div class="actions">
-    <a class="ghost" href="/">← Nuevo análisis</a>
-    <a href="/output/{{ pdf_name }}" download>Descargar PDF</a>
+    <a class="ghost" href="/">← New analysis</a>
+    <a href="/output/{{ pdf_name }}" download>Download PDF</a>
   </div>
 </div></div>
 <div class="wrapfull">
   <div class="chips">
-    <span class="chip"><b>{{ pubs_ver }}</b> publicaciones verificadas</span>
-    <span class="chip"><b>{{ pubs_exc }}</b> homónimos excluidos</span>
+    <span class="chip"><b>{{ pubs_ver }}</b> verified publications</span>
+    <span class="chip"><b>{{ pubs_exc }}</b> homonyms excluded</span>
     <span class="chip"><b>{{ trials_txt }}</b></span>
-    {% if area %}<span class="chip">Área: <b>{{ area }}</b>
-      {% if area_inferida %}<i>(inferida)</i>{% endif %}</span>{% endif %}
-    {% if ciudad %}<span class="chip">Ciudad: <b>{{ ciudad }}</b>
-      {% if ciudad_deducida %}<i>(deducida del centro)</i>{% endif %}</span>{% endif %}
-    <span class="chip">Verificación:
+    {% if area %}<span class="chip">Field: <b>{{ area }}</b>
+      {% if area_inferida %}<i>(inferred)</i>{% endif %}</span>{% endif %}
+    {% if ciudad %}<span class="chip">City: <b>{{ ciudad }}</b>
+      {% if ciudad_deducida %}<i>(derived from the centre)</i>{% endif %}</span>{% endif %}
+    <span class="chip">Verification:
       {% if vok %}<span class="vok">✓ OK</span>
-      {% else %}<span class="vfail">✗ revisar</span>{% endif %}</span>
+      {% else %}<span class="vfail">✗ review</span>{% endif %}</span>
   </div>
-  <iframe src="/output/{{ html_name }}" title="Dashboard KOL"></iframe>
+  <iframe src="/output/{{ html_name }}" title="KOL dashboard"></iframe>
 </div>
 """ + FOOTER + """
 </body></html>
 """
 
 ERROR_PAGE = """
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <title>Error</title><style>""" + BASE_CSS + FOOTER_CSS + """</style></head><body>
-<div class="top"><h1>Algo ha fallado</h1></div>
+<div class="top"><h1>Something went wrong</h1></div>
 <div class="wrap"><div class="card">
-  <p>No se pudo generar el perfil de <b>{{ nombre }}</b>.</p>
+  <p>Could not build the profile for <b>{{ nombre }}</b>.</p>
   <p class="hint">{{ error }}</p>
-  <p>Suele ser un problema de conexión con PubMed/ClinicalTrials. Reinténtalo
-     en unos segundos.</p>
-  <p><a href="/">← Volver</a></p>
+  <p>This is usually a connection problem with PubMed/ClinicalTrials. Try
+     again in a few seconds.</p>
+  <p><a href="/">← Back</a></p>
 </div></div>
 """ + FOOTER + """
 </body></html>
@@ -328,12 +329,12 @@ def buscar():
         return redirect(url_for("index"))
 
     apellidos = (f.get("apellidos") or "").strip() or None
-    largos = _demasiado_largo([("nombre", nombre), ("apellidos", apellidos)])
+    largos = _demasiado_largo([("name", nombre), ("surname", apellidos)])
     if largos:
         return render_template_string(
             ERROR_PAGE, nombre=nombre[:80],
-            error=f"Campo demasiado largo ({', '.join(largos)}): "
-                  f"máximo {MAX_CAMPO} caracteres.")
+            error=f"Field too long ({', '.join(largos)}): "
+                  f"maximum {MAX_CAMPO} characters.")
 
     try:
         res = candidatos.buscar_candidatos(nombre, surname=apellidos)
@@ -358,14 +359,14 @@ def generar():
         return redirect(url_for("index"))
 
     largos = _demasiado_largo(
-        (("nombre", nombre), ("institución", f.get("institucion")),
-         ("ciudad", f.get("ciudad")), ("especialidad", f.get("especialidad")),
-         ("apellidos", f.get("apellidos")), ("ORCID", f.get("orcid"))))
+        (("name", nombre), ("institution", f.get("institucion")),
+         ("city", f.get("ciudad")), ("specialty", f.get("especialidad")),
+         ("surname", f.get("apellidos")), ("ORCID", f.get("orcid"))))
     if largos:
         return render_template_string(
             ERROR_PAGE, nombre=nombre[:80],
-            error=f"Campo demasiado largo ({', '.join(largos)}): "
-                  f"máximo {MAX_CAMPO} caracteres.")
+            error=f"Field too long ({', '.join(largos)}): "
+                  f"maximum {MAX_CAMPO} characters.")
     # El apellido se deduce del nombre completo (disambiguator.parse_name).
     # Solo se pasa explicito si Miriam lo ha escrito en ajustes avanzados,
     # que es lo que salva los nombres de pila compuestos.
@@ -380,8 +381,8 @@ def generar():
 
     perfil = res["perfil"]
     trials = perfil["trials"]
-    trials_txt = (f"{trials['verified_count']} ensayos verificados" if trials
-                  else "0 ensayos verificados")
+    n_trials = trials["verified_count"] if trials else 0
+    trials_txt = f"{n_trials} verified trial" + ("" if n_trials == 1 else "s")
     return render_template_string(
         RESULT_PAGE,
         nombre=perfil["identity"]["header_name"],
@@ -407,5 +408,5 @@ def output_file(filename):
 
 
 if __name__ == "__main__":
-    print("\n  KOL Intelligence System — abre:  http://127.0.0.1:5001\n")
+    print("\n  KOL Intelligence System — open:  http://127.0.0.1:5001\n")
     app.run(host="127.0.0.1", port=5001, debug=False)

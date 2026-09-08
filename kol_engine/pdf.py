@@ -39,8 +39,8 @@ logger = logging.getLogger(__name__)
 
 MAXES = {"publications": 40, "trials": 20, "influence": 15,
          "therapeutic_relevance": 15, "crm": 10}
-NICE = {"publications": "Publicaciones", "trials": "Ensayos",
-        "influence": "Influencia", "therapeutic_relevance": "Relevancia terap.",
+NICE = {"publications": "Publications", "trials": "Trials",
+        "influence": "Influence", "therapeutic_relevance": "Therap. relevance",
         "crm": "CRM"}
 
 
@@ -109,7 +109,7 @@ def _cover(canvas, doc):
     if ident.get("specialty"):
         c.setFillColor(TEAL)
         c.setFont("Helvetica-Bold", 12)
-        sufijo = (" (inferida de sus publicaciones)"
+        sufijo = (" (inferred from their publications)"
                   if ident.get("specialty_origin") == "inferida" else "")
         c.drawCentredString(cx, y, ident["specialty"] + sufijo)
 
@@ -128,9 +128,9 @@ def _cover(canvas, doc):
     v = doc.kol["verification_note"]
     c.setFillColor(BLUE)
     c.setFont("Helvetica", 8.5)
-    c.drawCentredString(cx, 2.4 * cm, "Fuentes: " + " · ".join(v["sources"]))
+    c.drawCentredString(cx, 2.4 * cm, "Sources: " + " · ".join(v["sources"]))
     c.drawCentredString(cx, 1.9 * cm,
-                        f"Generado el {v['date']} · KOL Intelligence System")
+                        f"Generated on {v['date']} · KOL Intelligence System")
     c.restoreState()
 
 
@@ -154,7 +154,7 @@ def _header_footer(canvas, doc):
     c.setFillColor(MUTED)
     c.setFont("Helvetica", 8)
     c.drawString(2 * cm, 1.1 * cm, "KOL Intelligence System")
-    c.drawRightString(w - 2 * cm, 1.1 * cm, f"Página {doc.page}")
+    c.drawRightString(w - 2 * cm, 1.1 * cm, f"Page {doc.page}")
     c.restoreState()
 
 
@@ -211,14 +211,14 @@ def _kpi_styles():
 
 
 def _breakdown_table(breakdown, st, excluidos=()):
-    rows = [[Paragraph("Componente", st["cellh"]),
-             Paragraph("Puntos", st["cellh"]),
-             Paragraph("Máximo", st["cellh"])]]
+    rows = [[Paragraph("Component", st["cellh"]),
+             Paragraph("Points", st["cellh"]),
+             Paragraph("Max", st["cellh"])]]
     for k, v in breakdown.items():
         # Un componente excluido no se ha podido medir: no suma ni resta, y
         # el PDF debe decirlo en vez de mostrar un 0 que parece un suspenso.
         if k in excluidos:
-            valor, maximo = "no computa", "—"
+            valor, maximo = "not scored", "—"
         else:
             valor, maximo = str(v), str(MAXES.get(k, ""))
         rows.append([Paragraph(NICE.get(k, k), st["cell"]),
@@ -359,41 +359,41 @@ def _pagina4_ajustada(kol, sci, st):
 
 def _pagina4(kol, sci, st, n_lineas, n_colabs, n_anios, n_ensayos):
     """Contenido de la pagina 4 con los topes indicados."""
-    story = [Paragraph("Perfil científico", st["h1"]), Spacer(1, 6)]
+    story = [Paragraph("Scientific profile", st["h1"]), Spacer(1, 6)]
 
     lineas = sci.get("lineas_investigacion") or []
     if lineas and n_lineas:
         recurrentes = [l for l in lineas if l.get("recurrente")]
         if recurrentes:
-            story.append(Paragraph("Líneas de investigación", st["h2"]))
+            story.append(Paragraph("Research lines", st["h2"]))
             story.append(Paragraph(
-                "Temas que <b>repite</b> a lo largo de su obra: son línea de "
-                "trabajo, no un artículo suelto.", st["muted"]))
+                "Topics they <b>return to</b> across their work: a line of "
+                "research, not a one-off paper.", st["muted"]))
         else:
-            story.append(Paragraph("Temas tratados", st["h2"]))
+            story.append(Paragraph("Topics covered", st["h2"]))
             story.append(Paragraph(
-                "Ningún descriptor se repite en sus publicaciones: obra "
-                "temáticamente dispersa. Se listan sus temas más recientes.",
+                "No descriptor repeats across their publications: a "
+                "thematically scattered body of work. Most recent topics listed.",
                 st["muted"]))
         story.append(Spacer(1, 4))
         story.append(_tabla_simple(
-            "Tema (descriptor MeSH)", "Trabajos · último",
+            "Topic (MeSH descriptor)", "Papers · latest",
             [(l["tema"], f"{l['papers']} · {l['ultimo_anio'] or '—'}")
              for l in lineas[:n_lineas]], st, anchos=(12 * cm, 5 * cm)))
         story.append(Spacer(1, 12))
 
     tipos = sci.get("tipos_publicacion") or []
     if tipos:
-        story.append(Paragraph("Tipo de evidencia que produce", st["h2"]))
+        story.append(Paragraph("Type of evidence produced", st["h2"]))
         story.append(Paragraph(
             " · ".join(esc_tipo(t) for t in tipos[:6]), st["body"]))
         story.append(Spacer(1, 12))
 
     colabs = sci.get("colaboradores") or []
     if colabs and n_colabs:
-        story.append(Paragraph("Coautores habituales", st["h2"]))
+        story.append(Paragraph("Frequent co-authors", st["h2"]))
         story.append(_tabla_simple(
-            "Coautor", "Trabajos en común",
+            "Co-author", "Joint papers",
             [(c["nombre"], c["papers"]) for c in colabs[:n_colabs]], st,
             anchos=(12 * cm, 5 * cm)))
         story.append(Spacer(1, 12))
@@ -401,9 +401,9 @@ def _pagina4(kol, sci, st, n_lineas, n_colabs, n_anios, n_ensayos):
     tray = sci.get("trayectoria") or {}
     if tray.get("por_anio") and n_anios:
         anios = tray["por_anio"][-n_anios:]
-        titulo = "Actividad por año"
+        titulo = "Activity by year"
         if len(anios) < len(tray["por_anio"]):
-            titulo += f" (últimos {len(anios)})"
+            titulo += f" (last {len(anios)})"
         story.append(Paragraph(titulo, st["h2"]))
         story.extend(_sparkline_anios(anios, st))
         story.append(Spacer(1, 8))
@@ -413,27 +413,27 @@ def _pagina4(kol, sci, st, n_lineas, n_colabs, n_anios, n_ensayos):
     if mv:
         # h-index calculado sobre el set ya filtrado de homonimos: atribuible.
         nota_metricas = (
-            f" · <b>h-index {mv['hindex']}</b> y <b>"
-            f"{mv['citations']:,}".replace(",", ".") + "</b> citas, calculados "
-            f"sobre los {mv['papers_evaluados']} trabajos ya filtrados de "
-            "homónimos (no sobre una búsqueda por nombre).")
+            f" · <b>h-index {mv['hindex']}</b> and <b>"
+            f"{mv['citations']:,}" + "</b> citations, computed "
+            f"over the {mv['papers_evaluados']} papers already filtered for "
+            "homonyms (not over a search by name).")
     else:
         nota_metricas = (
-            f" · h-index y citas (Europe PMC): <font color='#C47A5C'><b>"
-            f"{m['hindex_europepmc']}</b></font>, sin desambiguar — las cifras "
-            "fiables son las de la página anterior.")
+            f" · h-index and citations (Europe PMC): <font color='#C47A5C'><b>"
+            f"{m['hindex_europepmc']}</b></font>, not disambiguated — the "
+            "reliable figures are on the previous page.")
 
-    story.append(Paragraph("Ensayos clínicos y métricas", st["h2"]))
+    story.append(Paragraph("Clinical trials and metrics", st["h2"]))
     if not kol["trials"]:
         story.append(Paragraph(
-            "<b>0 ensayos verificados</b> contra la localización del KOL. "
-            "Resultado válido: ningún ensayo de ClinicalTrials.gov con este "
-            "apellido se confirmó en su ciudad o institución, así que no se le "
-            "atribuye trabajo de posibles homónimos." + nota_metricas,
+            "<b>0 verified trials</b> against the KOL's location. A valid "
+            "result: no ClinicalTrials.gov study under this surname was "
+            "confirmed in their city or institution, so no work by possible "
+            "homonyms is attributed to them." + nota_metricas,
             st["muted"]))
     else:
-        rows = [[Paragraph("NCT", st["cellh"]), Paragraph("Título", st["cellh"]),
-                 Paragraph("Fase", st["cellh"]), Paragraph("Rol", st["cellh"])]]
+        rows = [[Paragraph("NCT", st["cellh"]), Paragraph("Title", st["cellh"]),
+                 Paragraph("Phase", st["cellh"]), Paragraph("Role", st["cellh"])]]
         for tr in kol["trials"]["items"][:n_ensayos]:
             rows.append([Paragraph(tr["nct"], st["cell"]),
                          Paragraph(tr["title"][:70], st["cell"]),
@@ -443,7 +443,7 @@ def _pagina4(kol, sci, st, n_lineas, n_colabs, n_anios, n_ensayos):
         t.setStyle(_table_style())
         story.append(t)
         restantes = len(kol["trials"]["items"]) - n_ensayos
-        cola = (f"… y {restantes} ensayo(s) más (ver dashboard). "
+        cola = (f"… and {restantes} more trial(s) (see dashboard). "
                 if restantes > 0 else "")
         story.append(Spacer(1, 5))
         story.append(Paragraph(cola + nota_metricas.lstrip(" ·"), st["muted"]))
@@ -461,50 +461,50 @@ def _story(kol, st):
     story.append(PageBreak())
 
     # ---- Pagina 2: Resumen ejecutivo ----
-    story.append(Paragraph("Resumen ejecutivo", st["h1"]))
+    story.append(Paragraph("Executive summary", st["h1"]))
     story.append(Spacer(1, 6))
 
     # "Quien es": la frase viene del perfil (fuente de verdad unica), no se
     # redacta aqui, para que dashboard y PDF digan exactamente lo mismo.
     sci = kol.get("perfil_cientifico") or {}
     if sci.get("resumen"):
-        story.append(Paragraph("Quién es", st["h2"]))
+        story.append(Paragraph("Who they are", st["h2"]))
         story.append(Paragraph(sci["resumen"], st["body"]))
         esp = sci.get("especialidad") or {}
         if esp.get("origen") == "inferida":
             story.append(Spacer(1, 3))
             story.append(Paragraph(
-                f"Área <b>inferida</b> ({esp.get('confianza', '—')} confianza). "
+                f"Field <b>inferred</b> (confidence: {esp.get('confianza', '—')}). "
                 + esp.get("detalle", ""), st["muted"]))
         story.append(Spacer(1, 12))
 
     story.append(_kpi_table([
-        (pub["verified_count"], "Publicaciones verif."),
-        (pub["recent_5y"], "Recientes (5 años)"),
-        (len(pub["journals"]), "Revistas"),
-        (nTrials, "Ensayos verif."),
-        (pub["excluded_count"], "Homónimos excl."),
+        (pub["verified_count"], "Verified pubs."),
+        (pub["recent_5y"], "Recent (5 yrs)"),
+        (len(pub["journals"]), "Journals"),
+        (nTrials, "Verified trials"),
+        (pub["excluded_count"], "Homonyms excl."),
     ]))
     story.append(Spacer(1, 16))
-    story.append(Paragraph("Desglose del KOL Score", st["h2"]))
+    story.append(Paragraph("KOL Score breakdown", st["h2"]))
     story.append(_breakdown_table(sc["breakdown"], st,
                                   excluidos=sc.get("excluded", {})))
     story.append(Spacer(1, 6))
     story.append(Paragraph(f"<b>Total: {sc['total']}/100 — {sc['tier']}</b>",
                            st["body"]))
     story.append(Spacer(1, 16))
-    story.append(Paragraph("Desambiguación", st["h2"]))
+    story.append(Paragraph("Disambiguation", st["h2"]))
     story.append(Paragraph(
-        f"Confianza: <b>{kol['disambiguation']['confidence'].upper()}</b>",
+        f"Confidence: <b>{kol['disambiguation']['confidence'].upper()}</b>",
         st["body"]))
     story.append(Paragraph(kol["disambiguation"]["notes"], st["muted"]))
 
     # ---- Pagina 3: Publicaciones ----
     story.append(PageBreak())
-    story.append(Paragraph("Publicaciones", st["h1"]))
+    story.append(Paragraph("Publications", st["h1"]))
     story.append(Spacer(1, 8))
-    rows = [[Paragraph("Año", st["cellh"]), Paragraph("Título", st["cellh"]),
-             Paragraph("Revista", st["cellh"]), Paragraph("Autoría", st["cellh"])]]
+    rows = [[Paragraph("Year", st["cellh"]), Paragraph("Title", st["cellh"]),
+             Paragraph("Journal", st["cellh"]), Paragraph("Authorship", st["cellh"])]]
     for it in pub["items"][:12]:
         titulo = it["title"][:95] + ("…" if len(it["title"]) > 95 else "")
         rows.append([Paragraph(str(it["year"]), st["cell"]),
@@ -517,10 +517,10 @@ def _story(kol, st):
     if len(pub["items"]) > 12:
         story.append(Spacer(1, 6))
         story.append(Paragraph(
-            f"… y {len(pub['items']) - 12} publicación(es) más "
-            "(ver dashboard).", st["muted"]))
+            f"… and {len(pub['items']) - 12} more publication(s) "
+            "(see dashboard).", st["muted"]))
     story.append(Spacer(1, 12))
-    story.append(Paragraph("Revistas", st["h2"]))
+    story.append(Paragraph("Journals", st["h2"]))
     story.append(Paragraph(" · ".join(pub["journals"][:22]) or "—", st["muted"]))
 
     # ---- Pagina 4: Perfil cientifico ----
@@ -538,16 +538,16 @@ def _story(kol, st):
 
     # ---- Pagina 5: Briefing ----
     story.append(PageBreak())
-    story.append(Paragraph("Briefing pre-visita", st["h1"]))
+    story.append(Paragraph("Pre-visit briefing", st["h1"]))
     story.append(Spacer(1, 8))
     b = kol["briefing"]
-    story.append(Paragraph("Puntos de conversación", st["h2"]))
+    story.append(Paragraph("Talking points", st["h2"]))
     story.extend(_bullets(b["talking_points"], st))
     story.append(Spacer(1, 8))
-    story.append(Paragraph("Hacer", st["h2"]))
+    story.append(Paragraph("Do", st["h2"]))
     story.extend(_bullets(b["do"], st, symbol="✓", color="#0a7a5c"))
     story.append(Spacer(1, 6))
-    story.append(Paragraph("Evitar", st["h2"]))
+    story.append(Paragraph("Avoid", st["h2"]))
     story.extend(_bullets(b["dont"], st, symbol="✕", color="#a24e2b"))
     story.append(Spacer(1, 6))
     story.append(Paragraph("Checklist", st["h2"]))
