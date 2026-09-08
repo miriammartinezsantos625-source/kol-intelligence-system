@@ -11,11 +11,11 @@ def _perfil(titulo_pub="Estudio sobre glioblastoma"):
     est = disambiguator.build_strategy(
         "Dra. Teresa San-Miguel", institution="Hospital La Fe", city="Valencia")
     items = [{"pmid": "12345678", "title": titulo_pub, "journal": "Neuropath",
-              "year": "2024", "author_position": "primera"}]
+              "year": "2024", "author_position": "first"}]
     analysis = {"verified": items, "unverified": [],
                 "log": {"excluded_count": 0, "excluded_reasons": {}}}
-    metrics = {"hindex_europepmc": "NO VERIFICADO",
-               "citations": "NO VERIFICADO", "epmc_raw_hits": 10, "note": "x"}
+    metrics = {"hindex_europepmc": "NOT VERIFIED",
+               "citations": "NOT VERIFIED", "epmc_raw_hits": 10, "note": "x"}
     return profile.build_profile(
         "Dra. Teresa San-Miguel", "Hospital La Fe", "Valencia", "España",
         None, "Neuropatologia", est, analysis,
@@ -43,7 +43,7 @@ def test_detecta_fuga_de_nombre_previo(tmp_path):
     informe = verify.verify_deliverables(perfil, html, ppdf,
                                          blocklist=["Zzz Previous Kol"])
     fuga = next(c for c in informe["checks"]
-                if c["name"] == "0 nombres de KOL previos")
+                if c["name"] == "0 names from previous KOLs")
     assert fuga["passed"] is False
     assert informe["ok"] is False
 
@@ -54,6 +54,6 @@ def test_detecta_badge_incoherente(tmp_path):
     perfil["identity"]["badge"]["score"] = 999  # cifra heredada / incoherente
     informe = verify.verify_deliverables(perfil, html, ppdf)
     badge = next(c for c in informe["checks"]
-                 if c["name"] == "Badge coherente con el score")
+                 if c["name"] == "Badge consistent with the score")
     assert badge["passed"] is False
     assert informe["ok"] is False

@@ -38,13 +38,13 @@ def _render(perfil):
 def _verificar(perfil, ruta_html, ruta_pdf):
     """Corre la verificacion final (Paso 9) e imprime el informe.
     Devuelve True si pasan todas las comprobaciones criticas."""
-    _titulo("Verificación final (Paso 9)")
+    _titulo("Final verification (step 9)")
     informe = verify.verify_deliverables(perfil, ruta_html, ruta_pdf)
     for c in informe["checks"]:
         marca = "✓" if c["passed"] else "✗"
         print(f"  {marca} {c['name']}: {c['detail']}")
-    print("\n" + ("✓ VERIFICACIÓN OK" if informe["ok"]
-                  else "✗ VERIFICACIÓN FALLIDA — revisar los ✗ de arriba"))
+    print("\n" + ("✓ VERIFICATION OK" if informe["ok"]
+                  else "✗ VERIFICATION FAILED — check the ✗ above"))
     return informe["ok"]
 
 
@@ -52,8 +52,8 @@ def _cargar_json(nombre):
     """Carga output/kol_profile_{Nombre}.json (para --solo-dashboard/pdf)."""
     ruta = os.path.join(OUTPUT_DIR, f"kol_profile_{_slug(nombre)}.json")
     if not os.path.exists(ruta):
-        print(f"✗ No existe {ruta}. Ejecuta primero sin --solo-* para "
-              "generar el JSON.")
+        print(f"✗ {ruta} does not exist. Run without --*-only first to "
+              "generate the JSON.")
         return None
     with open(ruta, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -61,30 +61,35 @@ def _cargar_json(nombre):
 
 def _parse_args(argv):
     p = argparse.ArgumentParser(
-        description="Genera inteligencia sobre un KOL a partir de su nombre e "
-                    "institucion.")
-    p.add_argument("nombre", help="Nombre del KOL, ej. 'Dra. Teresa San-Miguel'")
+        description="Builds intelligence on a KOL from their name and "
+                    "institution.")
+    # Los posicionales conservan su `dest` en castellano (args.nombre,
+    # args.institucion): solo cambia el nombre que se muestra en la ayuda.
+    p.add_argument("nombre", metavar="name",
+                   help="KOL name, e.g. 'Dra. Teresa San-Miguel'")
     p.add_argument("institucion", nargs="?", default=None,
-                   help="Donde trabaja, ej. 'Hospital La Fe'. La ciudad se "
-                        "deduce de aqui.")
-    p.add_argument("--ciudad", default=None,
-                   help="Solo si quieres forzarla; por defecto se deduce.")
-    p.add_argument("--pais", default=None)
+                   metavar="institution",
+                   help="Where they work, e.g. 'Hospital La Fe'. The city is "
+                        "derived from this.")
+    p.add_argument("--city", dest="ciudad", metavar="CITY", default=None,
+                   help="Only to force it; derived by default.")
+    p.add_argument("--country", dest="pais", metavar="COUNTRY", default=None)
     p.add_argument("--orcid", default=None)
-    p.add_argument("--especialidad", default=None,
-                   help="Solo si quieres forzarla; por defecto se infiere.")
-    p.add_argument("--apellidos", default=None,
-                   help="Apellido(s) explícitos (para nombres ambiguos).")
+    p.add_argument("--specialty", dest="especialidad", metavar="SPECIALTY",
+                   default=None,
+                   help="Only to force it; inferred by default.")
+    p.add_argument("--surname", dest="apellidos", metavar="SURNAME",
+                   default=None,
+                   help="Explicit surname(s), for ambiguous names.")
     p.add_argument("--retmax", type=int, default=pubmed_agent.MAX_PAPERS,
-                   help="Maximo de PMIDs a recuperar (por defecto 1000).")
+                   help="Maximum PMIDs to retrieve (1000 by default).")
     p.add_argument("--verbose", "-v", action="store_true",
-                   help="Muestra el detalle del proceso (avisos de red, caché).")
+                   help="Show the detail of the process (network, cache).")
     p.add_argument("--no-cache", action="store_true",
-                   help="Fuerza llamadas frescas a las APIs.")
-    # Flags de fases futuras (se aceptan pero avisan de que aun no hacen nada).
-    p.add_argument("--solo-json", action="store_true")
-    p.add_argument("--solo-dashboard", action="store_true")
-    p.add_argument("--solo-pdf", action="store_true")
+                   help="Force fresh calls to the APIs.")
+    p.add_argument("--json-only", dest="solo_json", action="store_true")
+    p.add_argument("--dashboard-only", dest="solo_dashboard", action="store_true")
+    p.add_argument("--pdf-only", dest="solo_pdf", action="store_true")
     return p.parse_args(argv)
 
 
@@ -132,32 +137,32 @@ def main(argv=None):
         surname=args.apellidos)
 
     _titulo(f"KOL: {args.nombre}")
-    print(f"Institución   : {args.institucion or '(no indicada)'}")
-    sufijo_ciudad = " (deducida del centro)" if ciudad_deducida else ""
-    print(f"Ciudad        : {(args.ciudad or '(no indicada)')}{sufijo_ciudad}")
-    print(f"Query PubMed  : {estrategia['query_used']}")
-    print(f"Localización  : {estrategia['location_terms'] or '(ninguna)'}")
-    print(f"Confianza     : {estrategia['confidence'].upper()}")
-    print(f"Notas         : {estrategia['notes']}")
+    print(f"Institution  : {args.institucion or '(not given)'}")
+    sufijo_ciudad = " (derived from the centre)" if ciudad_deducida else ""
+    print(f"City         : {(args.ciudad or '(not given)')}{sufijo_ciudad}")
+    print(f"PubMed query : {estrategia['query_used']}")
+    print(f"Location     : {estrategia['location_terms'] or '(none)'}")
+    print(f"Confidence   : {estrategia['confidence'].upper()}")
+    print(f"Notes        : {estrategia['notes']}")
 
     # --- Paso 2: busqueda + filtrado en PubMed ---
-    _titulo("PubMed — búsqueda y filtrado de homónimos")
+    _titulo("PubMed — search and homonym filtering")
     try:
         res = pubmed_agent.analyze(
             estrategia, retmax=args.retmax, email=None,
             use_cache=not args.no_cache)
     except Exception as e:  # red caida, timeout, etc.: fallar con honestidad
-        print(f"✗ Error consultando PubMed: {e}")
+        print(f"✗ Error querying PubMed: {e}")
         return 2
 
     log = res["log"]
-    print(f"PMIDs encontrados por la query : {len(res['pmids_found'])}")
-    print(f"Papers analizados             : {log['input_count']}")
-    print(f"  ✓ verificados (del KOL)     : {log['verified_count']}")
-    print(f"  ~ sin verificar (probables) : {log['unverified_count']}")
-    print(f"  ✗ excluidos (homónimos)     : {log['excluded_count']}")
+    print(f"PMIDs found by the query   : {len(res['pmids_found'])}")
+    print(f"Papers analysed            : {log['input_count']}")
+    print(f"  ✓ verified (the KOL's)   : {log['verified_count']}")
+    print(f"  ~ unverified (probable)  : {log['unverified_count']}")
+    print(f"  ✗ excluded (homonyms)    : {log['excluded_count']}")
     if log["excluded_reasons"]:
-        print("  Motivos de exclusión:")
+        print("  Exclusion reasons:")
         for motivo, n in sorted(log["excluded_reasons"].items(),
                                 key=lambda kv: -kv[1]):
             print(f"    - {motivo}: {n}")
@@ -166,36 +171,36 @@ def main(argv=None):
     verificados = sorted(res["verified"],
                          key=lambda p: p.get("year", ""), reverse=True)
     if verificados:
-        _titulo("Muestra de publicaciones verificadas (máx. 5)")
+        _titulo("Sample of verified publications (max. 5)")
         for p in verificados[:5]:
             print(f"  [{p['year']}] {p['title'][:70]}")
             print(f"          {p['journal']} · PMID {p['pmid']} · "
-                  f"autoría {p['author_position']}")
+                  f"{p['author_position']} author")
 
     # --- Paso 3: ensayos clinicos (verificados por localizacion) ---
-    _titulo("ClinicalTrials.gov — ensayos verificados por localización")
+    _titulo("ClinicalTrials.gov — trials verified by location")
     try:
         trials_result = clinicaltrials_agent.find_trials(
             args.nombre, estrategia["surname"], estrategia["initial"],
             estrategia["location_terms"], city=args.ciudad,
             use_cache=not args.no_cache)
     except Exception as e:
-        print(f"⚠  No se pudo consultar ClinicalTrials.gov ({e}).")
+        print(f"⚠  ClinicalTrials.gov could not be queried ({e}).")
         # Se marca el fallo: "no se pudo mirar" NO es "no hay ensayos".
         trials_result = {"trials": None, "log": {},
                          "error": str(e) or e.__class__.__name__}
 
     ct_log = trials_result.get("log", {})
     if trials_result.get("error"):
-        print("⚠  NO COMPROBADO: el apartado de ensayos queda sin verificar. "
-              "No interpretar como ausencia de ensayos.")
+        print("⚠  NOT CHECKED: the trials section is left unverified. "
+              "Do not read it as an absence of trials.")
     elif trials_result["trials"] is None:
-        print(f"Estudios encontrados : {ct_log.get('studies_found', 0)}")
-        print("✓ 0 ensayos verificados (resultado VÁLIDO — no se atribuye "
-              "trabajo de homónimos).")
+        print(f"Studies found : {ct_log.get('studies_found', 0)}")
+        print("✓ 0 verified trials (VALID result — no work by homonyms is "
+              "attributed).")
     else:
         t = trials_result["trials"]
-        print(f"✓ {t['verified_count']} ensayo(s) verificado(s) por localización:")
+        print(f"✓ {t['verified_count']} trial(s) verified by location:")
         for it in t["items"][:5]:
             print(f"    {it['nct']} · {it['phase']} · {it['role']} · {it['location'][:45]}")
 
@@ -212,8 +217,8 @@ def main(argv=None):
     if metrics_verified:
         metrics_verified["papers_verificados"] = len(res.get("verified", []))
         metrics_verified["papers_sin_verificar"] = len(res.get("unverified", []))
-        print(f"h-index (set desambiguado) : {metrics_verified['hindex']} "
-              f"· {metrics_verified['citations']:,} citas".replace(",", "."))
+        print(f"h-index (disambiguated set) : {metrics_verified['hindex']} "
+              f"· {metrics_verified['citations']:,} citations")
 
     # --- Paso 5: ensamblar kol_profile.json (la fuente de verdad) ---
     perfil = profile.build_profile(
@@ -222,45 +227,45 @@ def main(argv=None):
         metrics_verified=metrics_verified)
     ruta_json = profile.save_profile(perfil, OUTPUT_DIR)
 
-    _titulo("Perfil científico (deducido de sus publicaciones)")
+    _titulo("Scientific profile (derived from their publications)")
     sci = perfil["perfil_cientifico"]
     esp = sci["especialidad"]
-    print(f"Área          : {esp['nombre'] or '(no determinada)'} "
-          f"[{esp['origen']}, confianza {esp['confianza']}]")
+    print(f"Field         : {esp['nombre'] or '(undetermined)'} "
+          f"[{esp['origen']}, confidence {esp['confianza']}]")
     if sci["servicio"]:
-        print(f"Servicio      : {sci['servicio']['nombre']}")
+        print(f"Department    : {sci['servicio']['nombre']}")
     lineas = sci["lineas_investigacion"]
     if lineas:
-        etiqueta = ("Líneas rec." if any(l["recurrente"] for l in lineas)
-                    else "Temas")
+        etiqueta = ("Research lines" if any(l["recurrente"] for l in lineas)
+                    else "Topics")
         print(f"{etiqueta:14}: " + ", ".join(
             f"{l['tema']} ({l['papers']})" for l in lineas[:5]))
     if sci["colaboradores"]:
-        print("Coautores     : " + ", ".join(
+        print("Co-authors    : " + ", ".join(
             f"{c['nombre']} ({c['papers']})" for c in sci["colaboradores"][:4]))
-    print(f"\nResumen: {sci['resumen']}")
+    print(f"\nSummary: {sci['resumen']}")
 
-    _titulo("KOL Score y perfil")
+    _titulo("KOL Score and profile")
     sc = perfil["score"]
     print(f"KOL Score : {sc['total']}/100   →   {sc['tier']}")
-    print("Desglose  :")
+    print("Breakdown :")
     for k, v in sc["breakdown"].items():
         print(f"    {k:22}: {v}")
-    print(f"\n✓ Perfil guardado en: {ruta_json}")
+    print(f"\n✓ Profile saved to: {ruta_json}")
 
     if args.solo_json:
-        print("\n(--solo-json) Fin: solo se generó el JSON.")
+        print("\n(--json-only) Done: only the JSON was generated.")
         return 0
 
     # --- Paso 6: render (dashboard HTML + dossier PDF) ---
-    _titulo("Entregables")
+    _titulo("Deliverables")
     ruta_html, ruta_pdf = _render(perfil)
 
     # --- Paso 7: verificación final automática ---
     ok = _verificar(perfil, ruta_html, ruta_pdf)
 
-    print("\n✓ Listo. Perfil, dashboard y dossier generados desde la misma "
-          "fuente de verdad (kol_profile.json).")
+    print("\n✓ Done. Profile, dashboard and dossier built from the same "
+          "source of truth (kol_profile.json).")
     return 0 if ok else 3
 
 

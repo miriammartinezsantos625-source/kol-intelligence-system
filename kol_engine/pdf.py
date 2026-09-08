@@ -110,7 +110,7 @@ def _cover(canvas, doc):
         c.setFillColor(TEAL)
         c.setFont("Helvetica-Bold", 12)
         sufijo = (" (inferred from their publications)"
-                  if ident.get("specialty_origin") == "inferida" else "")
+                  if ident.get("specialty_origin") == "inferred" else "")
         c.drawCentredString(cx, y, ident["specialty"] + sufijo)
 
     # Tarjeta de score
@@ -471,7 +471,7 @@ def _story(kol, st):
         story.append(Paragraph("Who they are", st["h2"]))
         story.append(Paragraph(sci["resumen"], st["body"]))
         esp = sci.get("especialidad") or {}
-        if esp.get("origen") == "inferida":
+        if esp.get("origen") == "inferred":
             story.append(Spacer(1, 3))
             story.append(Paragraph(
                 f"Field <b>inferred</b> (confidence: {esp.get('confianza', '—')}). "

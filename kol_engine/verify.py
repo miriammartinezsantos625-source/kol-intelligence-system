@@ -62,15 +62,15 @@ def verify_deliverables(profile, html_path, pdf_path, blocklist=None):
 
     # 1) PDF de 5 paginas.
     checks.append(_check(
-        "PDF de 5 páginas", n_paginas == 5,
-        f"{n_paginas} página(s)"))
+        "5-page PDF", n_paginas == 5,
+        f"{n_paginas} page(s)"))
 
     # 2) El nombre del KOL actual aparece en ambos entregables.
     checks.append(_check(
-        "Nombre del KOL en el dashboard", nombre_norm in html_norm,
+        "KOL name in the dashboard", nombre_norm in html_norm,
         f"«{nombre}»"))
     checks.append(_check(
-        "Nombre del KOL en el PDF", nombre_norm in pdf_norm,
+        "KOL name in the PDF", nombre_norm in pdf_norm,
         f"«{nombre}»"))
 
     # 3) Ningun nombre de KOL previo (excluyendo el actual).
@@ -92,8 +92,8 @@ def verify_deliverables(profile, html_path, pdf_path, blocklist=None):
         if pn in html_norm or pn in pdf_norm:
             fugas.append(prev)
     checks.append(_check(
-        "0 nombres de KOL previos", not fugas,
-        "sin fugas" if not fugas else f"fugas: {', '.join(fugas)}"))
+        "0 names from previous KOLs", not fugas,
+        "no leaks" if not fugas else f"leaks: {', '.join(fugas)}"))
 
     # 4) PMIDs bien formados (solo digitos).
     pmids = [it.get("pmid", "") for it in profile["publications"]["items"]]
@@ -118,7 +118,7 @@ def verify_deliverables(profile, html_path, pdf_path, blocklist=None):
     coherente = (badge.get("score") == sc.get("total")
                  and badge.get("tier") == sc.get("tier"))
     checks.append(_check(
-        "Badge coherente con el score", coherente,
+        "Badge consistent with the score", coherente,
         f"badge {badge.get('score')}/{badge.get('tier')} vs "
         f"score {sc.get('total')}/{sc.get('tier')}"))
 

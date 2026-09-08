@@ -106,7 +106,7 @@
   footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);
        font-size:12.5px;color:var(--muted)}
   .conf{font-size:13px;font-weight:700}
-  .conf.alta{color:#0a7a5c}.conf.media{color:#a24e2b}.conf.baja{color:#a2302b}
+  .conf.high{color:#0a7a5c}.conf.medium{color:#a24e2b}.conf.low{color:#a2302b}
 </style>
 </head>
 <body>
@@ -302,7 +302,7 @@ const KOL_DATA = __KOL_DATA__;
     $("quienEsCard").style.display = "";
     $("quienEs").textContent = sci.resumen;
     const esp = sci.especialidad || {};
-    if(esp.origen === "inferida"){
+    if(esp.origen === "inferred"){
       $("quienEsNota").textContent =
         "Field inferred (confidence: " + (esp.confianza || "—") + "). " +
         (esp.detalle || "");

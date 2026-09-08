@@ -139,11 +139,11 @@ def verify_trials(studies, surname, initial, location_terms):
                         None)
 
         if official is None:
-            _anota("sin investigador que coincida con el KOL (apellido+inicial)")
+            _anota("no investigator matching the KOL (surname+initial)")
             continue
 
         if not location_terms:
-            _anota("sin términos de localización (no verificable)")
+            _anota("no location terms (not verifiable)")
             continue
 
         # Localizacion: afiliacion del investigador o alguna sede del ensayo.
@@ -153,7 +153,7 @@ def verify_trials(studies, surname, initial, location_terms):
                     or _localizacion_coincide(sedes_txt, location_terms))
 
         if not coincide:
-            _anota("localización no coincide con la del KOL")
+            _anota("location does not match the KOL's")
             continue
 
         # Sede legible para el output.

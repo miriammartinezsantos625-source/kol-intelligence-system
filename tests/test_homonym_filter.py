@@ -111,8 +111,8 @@ def test_fallback_por_coautor_marca_el_motivo():
     """El paper 4 se verifica via la afiliacion de un coautor y se anota."""
     res = filter_homonyms(PAPERS, SURNAME, INITIAL, LOCATION_TERMS)
     paper4 = next(p for p in res["verified"] if p["pmid"] == "4")
-    assert paper4["author_position"] == "última"
-    assert "coautor" in paper4["_motivo"]
+    assert paper4["author_position"] == "last"
+    assert "co-author" in paper4["_motivo"]
 
 
 def test_log_cuenta_bien():
@@ -161,7 +161,7 @@ def test_la_ciudad_sola_no_verifica_un_paper():
                           strong_terms=["cnio"])
     assert len(res["verified"]) == 0
     assert len(res["unverified"]) == 1
-    assert "solo coincide la ciudad" in res["unverified"][0]["_motivo"]
+    assert "only the city" in res["unverified"][0]["_motivo"]
 
 
 def test_la_institucion_si_verifica():

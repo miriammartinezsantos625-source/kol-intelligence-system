@@ -393,7 +393,7 @@ def generar():
         trials_txt=trials_txt,
         vok=res["verify_report"]["ok"],
         area=perfil["identity"].get("specialty"),
-        area_inferida=perfil["identity"].get("specialty_origin") == "inferida",
+        area_inferida=perfil["identity"].get("specialty_origin") == "inferred",
         ciudad=perfil["identity"].get("city"),
         ciudad_deducida=bool(res.get("ciudad_deducida")),
         html_name=os.path.basename(res["html_path"]),

@@ -104,9 +104,9 @@ def run_pipeline(nombre, institucion=None, ciudad=None, pais=None, orcid=None,
     verify_report = verify.verify_deliverables(perfil, html_path, pdf_path)
     if not verify_report["ok"]:
         fallos = [c["name"] for c in verify_report["checks"] if not c["passed"]]
-        logger.error("verificación FALLIDA para %s: %s", nombre, fallos)
+        logger.error("verification FAILED for %s: %s", nombre, fallos)
     else:
-        logger.info("perfil completo: %s — score %s (%s), %d publicaciones",
+        logger.info("profile complete: %s — score %s (%s), %d publications",
                     nombre, perfil["score"]["total"], perfil["score"]["tier"],
                     perfil["publications"]["verified_count"])
 

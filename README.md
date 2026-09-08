@@ -69,16 +69,25 @@ python kol.py "Dra. Teresa San-Miguel" "Hospital La Fe" \
 
 ### Flags
 
-| Flag               | What it does                                          |
-|--------------------|-------------------------------------------------------|
-| `--orcid`          | Unique author identifier: confidence becomes **high** |
-| `--ciudad`         | Forces the city (derived from the institution by default) |
-| `--especialidad`   | Forces the field (inferred from their papers by default)  |
-| `--apellidos`      | Explicit surname, for compound given names            |
-| `--solo-json`      | Generates only `kol_profile.json` (to review first)   |
-| `--solo-dashboard` | Rebuilds the HTML from an existing JSON               |
-| `--solo-pdf`       | Rebuilds the PDF from an existing JSON                |
-| `--no-cache`       | Forces fresh API calls                                |
+| Flag               | What it does                                              |
+|--------------------|-----------------------------------------------------------|
+| `--orcid`          | Unique author identifier: confidence becomes **high**     |
+| `--city`           | Forces the city (derived from the institution by default) |
+| `--specialty`      | Forces the field (inferred from their papers by default)  |
+| `--surname`        | Explicit surname, for compound given names                |
+| `--json-only`      | Generates only `kol_profile.json` (to review first)       |
+| `--dashboard-only` | Rebuilds the HTML from an existing JSON                   |
+| `--pdf-only`       | Rebuilds the PDF from an existing JSON                    |
+| `--no-cache`       | Forces fresh API calls                                    |
+
+## Language
+
+Everything the tool produces — the web interface, the dashboard, the PDF
+dossier and the CLI — is in English. The source data it quotes is not
+translated and never will be: Spanish hospital and department names, city
+names and the titles of Spanish-language papers appear exactly as their
+sources record them. Inside the code, comments and identifiers are in
+Spanish; that is deliberate and documented in `CLAUDE.md`.
 
 ## Layout
 

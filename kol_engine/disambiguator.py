@@ -168,14 +168,13 @@ def build_strategy(full_name, institution=None, city=None, country=None,
     # --- Rama 1: tenemos ORCID -> maxima confianza ---
     if orcid:
         query = f"{orcid}[auid]"
-        confidence = "alta"
+        confidence = "high"
         notas.append(
-            f"Se usa el ORCID {orcid} como identificador único de autor "
-            "([auid]); es la señal más fiable contra homónimos."
+            f"ORCID {orcid} is used as the unique author identifier "
+            "([auid]); it is the most reliable signal against homonyms."
         )
         notas.append(
-            "Aun así, el filtrado por afiliación se aplica como red de "
-            "seguridad."
+            "Even so, affiliation filtering is applied as a safety net."
         )
     else:
         # --- Rama 2/3: construimos por nombre (+ afiliacion si la hay) ---
@@ -185,30 +184,30 @@ def build_strategy(full_name, institution=None, city=None, country=None,
                 f'"{t}"[Affiliation]' for t in location_terms
             )
             query = f"{query} AND ({filtro_afil})"
-            confidence = "media"
+            confidence = "medium"
             notas.append(
-                "Sin ORCID: se combina nombre de autor con filtro de "
-                f"afiliación ({', '.join(location_terms)}). El filtrado de "
-                "homónimos posterior refina el resultado."
+                "No ORCID: the author name is combined with an affiliation "
+                f"filter ({', '.join(location_terms)}). The later homonym "
+                "filtering refines the result."
             )
             debiles = [t for t in location_terms if t not in strong_terms]
             if debiles:
                 notas.append(
-                    f"«{', '.join(debiles)}» amplía la búsqueda pero no basta "
-                    "para verificar: un paper que solo coincida ahí queda como "
-                    "«sin verificar», no como confirmado."
+                    f"«{', '.join(debiles)}» widens the search but is not "
+                    "enough to verify: a paper matching only there stays "
+                    "«unverified», not confirmed."
                 )
         else:
-            confidence = "baja"
+            confidence = "low"
             notas.append(
-                "Solo se dispone del nombre (sin ORCID ni institución/ciudad). "
-                "Alto riesgo de homónimos; el resultado debe revisarse a mano."
+                "Only the name is available (no ORCID, no institution/city). "
+                "High homonym risk; the result must be reviewed by hand."
             )
 
     if specialty:
         notas.append(
-            f"Especialidad declarada: {specialty} (contexto, no se añade a la "
-            "query para no perder papers)."
+            f"Declared specialty: {specialty} (context only, not added to the "
+            "query so as not to lose papers)."
         )
 
     return {

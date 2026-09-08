@@ -101,7 +101,7 @@ def _peticion(metodo, url, **kwargs):
             r.raise_for_status()
             return r
 
-        logger.info("PubMed 429 (límite de peticiones), intento %d/%d",
+        logger.info("PubMed 429 (rate limit), attempt %d/%d",
                     intento + 1, REINTENTOS)
         if intento < REINTENTOS - 1:
             time.sleep(espera)
@@ -245,7 +245,7 @@ def fetch_papers(pmids, api_key=None, email=None, use_cache=True):
             raise
         # El culpable puede ser una entrada de cache corrupta: se descarta y
         # se pide fresco una sola vez. Si vuelve a fallar, es de PubMed.
-        logger.warning("efetch corrupto (%s); reintento sin caché", e)
+        logger.warning("corrupt efetch (%s); retrying without cache", e)
         try:
             os.unlink(ruta)
         except OSError:
@@ -397,12 +397,12 @@ def _autor_orcid_coincide(orcid_autor, orcid_kol):
 
 def _posicion_autoria(indice, total):
     if total <= 0:
-        return "desconocida"
+        return "unknown"
     if indice == 0:
-        return "primera"
+        return "first"
     if indice == total - 1:
-        return "última"
-    return "intermedia"
+        return "last"
+    return "middle"
 
 
 def filter_homonyms(papers, surname, initial, location_terms, orcid=None,
@@ -452,7 +452,7 @@ def filter_homonyms(papers, surname, initial, location_terms, orcid=None,
                 break
 
         if objetivo is None:
-            motivo = f"sin autor «{surname} {initial}»".replace("  »", "»")
+            motivo = f"no author «{surname} {initial}»".replace("  »", "»")
             _anota_razon(motivo)
             excluidos.append({**paper, "_motivo": motivo})
             continue
@@ -465,7 +465,7 @@ def filter_homonyms(papers, surname, initial, location_terms, orcid=None,
 
         # Paso 2a: ORCID coincide -> verificado directo.
         if _autor_orcid_coincide(objetivo["orcid"], orcid):
-            enriquecido["_motivo"] = "ORCID coincide"
+            enriquecido["_motivo"] = "ORCID matches"
             verificados.append(enriquecido)
             continue
 
@@ -481,11 +481,11 @@ def filter_homonyms(papers, surname, initial, location_terms, orcid=None,
 
         # Paso 2b: no podemos verificar por localizacion.
         if not location_terms:
-            enriquecido["_motivo"] = "sin términos de localización (no verificable)"
+            enriquecido["_motivo"] = "no location terms (not verifiable)"
             sin_verificar.append(enriquecido)
             continue
         if not afil_texto:
-            enriquecido["_motivo"] = "sin afiliación en el registro (no verificable)"
+            enriquecido["_motivo"] = "no affiliation on the record (not verifiable)"
             sin_verificar.append(enriquecido)
             continue
 
@@ -493,20 +493,20 @@ def filter_homonyms(papers, surname, initial, location_terms, orcid=None,
         # (por palabra completa: 'fe' no debe coincidir dentro de 'Tenerife').
         acierto = matches_any(afil_texto, location_terms)
         if acierto and acierto in strong_terms:
-            nota = f"afiliación coincide con «{acierto}»"
+            nota = f"affiliation matches «{acierto}»"
             if fallback:
-                nota += " (vía afiliación de coautor)"
+                nota += " (via a co-author's affiliation)"
             enriquecido["_motivo"] = nota
             verificados.append(enriquecido)
         elif acierto:
             # Solo casa la ciudad: probable, pero no confirmado. Decirlo.
             enriquecido["_motivo"] = (
-                f"solo coincide la ciudad «{acierto}», no la institución "
-                "(no verificable)")
+                f"only the city «{acierto}» matches, not the institution "
+                "(not verifiable)")
             sin_verificar.append(enriquecido)
         else:
             corta = (afil_autor or afil_texto)[:80]
-            motivo = "afiliación no coincide con la localización del KOL"
+            motivo = "affiliation does not match the KOL's location"
             _anota_razon(motivo)
             enriquecido["_motivo"] = f"{motivo}: «{corta}»"
             excluidos.append(enriquecido)

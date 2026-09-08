@@ -209,9 +209,9 @@ def _perfil_minimo():
         "coverage": {"total_en_pubmed": 0, "analizados": 0,
                      "truncado": False, "tope": 1000},
     }
-    strategy = {"query_used": "q", "confidence": "media", "notes": "",
+    strategy = {"query_used": "q", "confidence": "medium", "notes": "",
                 "location_terms": ["madrid"], "surname": "Ruiz", "initial": "a"}
-    metrics = {"hindex_europepmc": "NO VERIFICADO", "citations": "NO VERIFICADO",
+    metrics = {"hindex_europepmc": "NOT VERIFIED", "citations": "NOT VERIFIED",
                "epmc_raw_hits": None, "note": ""}
 
     return build_profile("Ana Ruiz", "Hospital X", "Madrid", "ES", None, None,

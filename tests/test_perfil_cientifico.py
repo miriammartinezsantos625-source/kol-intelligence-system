@@ -47,8 +47,8 @@ def test_el_servicio_manda_sobre_el_recuento_de_mesh():
                afiliacion=afil),
     ]
     esp = pc.inferir_especialidad(papers, servicio_texto=afil)
-    assert esp["nombre"] == "Cirugía general y del aparato digestivo"
-    assert esp["origen_senal"] == "servicio"
+    assert esp["nombre"] == "General and digestive surgery"
+    assert esp["origen_senal"] == "department"
 
 
 def test_sin_servicio_decide_el_recuento():
@@ -58,8 +58,8 @@ def test_sin_servicio_decide_el_recuento():
         _paper(2023, mesh=["Glaucoma"]),
     ]
     esp = pc.inferir_especialidad(papers)
-    assert esp["nombre"] == "Oftalmología"
-    assert esp["origen_senal"] == "publicaciones"
+    assert esp["nombre"] == "Ophthalmology"
+    assert esp["origen_senal"] == "publications"
 
 
 def test_el_servicio_no_manda_si_los_papers_no_lo_respaldan():
@@ -73,7 +73,7 @@ def test_el_servicio_no_manda_si_los_papers_no_lo_respaldan():
         _paper(2023, mesh=["Glaucoma"]),
     ]
     esp = pc.inferir_especialidad(papers, servicio_texto="Department of Cardiology")
-    assert esp["nombre"] == "Oftalmología"
+    assert esp["nombre"] == "Ophthalmology"
 
 
 def test_sin_papers_no_hay_especialidad():
@@ -164,27 +164,33 @@ def test_trayectoria_sin_anios_validos():
 def test_tipos_publicacion_se_traducen():
     papers = [_paper(2025, pubtypes=["Meta-Analysis", "Journal Article"])]
     tipos = pc.tipos_publicacion(papers)
-    assert tipos[0]["tipo"] == "Metaanálisis" and tipos[0]["papers"] == 1
+    assert tipos[0]["tipo"] == "Meta-analysis" and tipos[0]["papers"] == 1
     # 'Journal Article' lo lleva todo: no aporta nada, no se lista.
     assert all(t["tipo"] != "Journal Article" for t in tipos)
 
 
 def test_tipos_publicacion_concuerdan_en_numero():
-    """'2 revisión sistemática' es justo lo que no debe salir en un dossier."""
+    """'2 systematic review' es justo lo que no debe salir en un dossier."""
     papers = [_paper(2025, pubtypes=["Systematic Review"]),
               _paper(2024, pubtypes=["Systematic Review"]),
               _paper(2023, pubtypes=["Observational Study"])]
     textos = {t["texto"] for t in pc.tipos_publicacion(papers)}
-    assert "2 revisiones sistemáticas" in textos
-    assert "1 estudio observacional" in textos
+    assert "2 systematic reviews" in textos
+    assert "1 observational study" in textos
 
 
-def test_metaanalisis_es_invariable_en_plural():
+def test_el_plural_no_es_anadir_una_s():
+    """El plural va en la tabla, no en una regla ingenua.
+
+    En castellano el caso era "metaanálisis" (invariable); en ingles es
+    "meta-analyses", que tampoco sale de anadir una s. El motivo del test
+    sigue siendo el mismo.
+    """
     papers = [_paper(2025, pubtypes=["Meta-Analysis"]),
               _paper(2024, pubtypes=["Meta-Analysis"])]
-    assert pc.tipos_publicacion(papers)[0]["texto"] == "2 metaanálisis"
+    assert pc.tipos_publicacion(papers)[0]["texto"] == "2 meta-analyses"
 
 
 def test_resumen_no_inventa_cuando_no_hay_datos():
     r = pc.resumen(None, None, None, [], {})
-    assert "no hay publicaciones verificadas" in r.lower()
+    assert "not enough verified publications" in r.lower()

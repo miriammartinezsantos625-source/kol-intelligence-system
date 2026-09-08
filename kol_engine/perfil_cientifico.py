@@ -70,17 +70,17 @@ MESH_GENERICOS = {
 # Los patrones se comparan sobre texto normalizado (sin tildes, minúsculas),
 # así que se escriben así: 'cirugia', no 'cirugía'.
 ESPECIALIDADES = [
-    ("Oncología médica", [
+    ("Medical oncology", [
         "neoplasm", "carcinoma", "antineoplastic", "chemotherapy", "oncolog",
         "tumor", "tumour", "cancer", "immunotherapy", "metastas", "sarcoma",
         "melanoma",
     ]),
-    ("Hematología", [
+    ("Haematology", [
         "hematolog", "haematolog", "leukemia", "leukaemia", "lymphoma",
         "myeloma", "anemia", "thrombo", "hemostas", "blood", "bone marrow",
         "transplantation hematopoietic", "coagulation",
     ]),
-    ("Cirugía general y del aparato digestivo", [
+    ("General and digestive surgery", [
         "surgical procedures digestive", "colorectal surg", "colectomy",
         "appendectomy", "cholecystectomy", "laparoscop", "surg endosc",
         "gastrointestinal surg", "hernia", "mesenteric", "anastomo",
@@ -90,104 +90,104 @@ ESPECIALIDADES = [
         "cirugia general y del aparato digestivo", "cirugia digestiva",
         "cirugia general",
     ]),
-    ("Cirugía", [
+    ("Surgery", [
         "surgical procedures operative", "surg", "operative", "reconstruction",
         "postoperative", "intraoperative", "surgeons",
     ]),
-    ("Aparato digestivo", [
+    ("Gastroenterology", [
         "gastroenterol", "hepatolog", "liver", "hepatic", "pancrea",
         "inflammatory bowel", "crohn", "colitis", "gastric", "intestinal",
         "esophag", "oesophag", "colon", "rectum", "biliary", "cirrhosis",
     ]),
-    ("Cardiología", [
+    ("Cardiology", [
         "cardiolog", "heart", "cardiac", "myocard", "coronary", "arrhythmi",
         "atrial fibrillation", "hypertension", "cardiovascular", "aortic",
         "echocardiograph", "heart failure",
     ]),
-    ("Neurología", [
+    ("Neurology", [
         "neurolog", "brain", "nervous system", "stroke", "epilep",
         "parkinson", "alzheimer", "multiple sclerosis", "dementia",
         "neurodegener", "migraine", "neuromuscular",
     ]),
-    ("Neurocirugía", [
+    ("Neurosurgery", [
         "neurosurg", "craniotomy", "glioblastoma", "brain neoplasm",
         "intracranial",
     ]),
-    ("Anatomía patológica", [
+    ("Pathology", [
         "patholog", "histolog", "immunohistochem", "biopsy", "cytolog",
         "biomarkers tumor",
     ]),
-    ("Oftalmología", [
+    ("Ophthalmology", [
         "ophthalmol", "retina", "retinal", "uveitis", "macular", "glaucoma",
         "cornea", "cataract", "vitreo", "eye disease", "visual acuity",
         "intravitreal",
     ]),
-    ("Dermatología", [
+    ("Dermatology", [
         "dermatolog", "skin disease", "psoriasis", "dermatitis", "cutaneous",
         "acne", "alopecia", "hidradenitis",
     ]),
-    ("Neumología", [
+    ("Respiratory medicine", [
         "pulmon", "respiratory tract", "lung disease", "asthma", "copd",
         "pulmonary disease chronic", "bronch", "thorax", "sleep apnea",
         "cystic fibrosis",
     ]),
-    ("Endocrinología y nutrición", [
+    ("Endocrinology and nutrition", [
         "endocrin", "diabetes", "thyroid", "obesity", "insulin", "metabolic",
         "pituitary", "adrenal", "osteoporosis", "lipid", "nutrition",
     ]),
-    ("Reumatología", [
+    ("Rheumatology", [
         "rheumat", "arthritis", "lupus", "spondyl", "autoimmune disease",
         "connective tissue disease", "gout", "fibromyalgia",
     ]),
-    ("Enfermedades infecciosas", [
+    ("Infectious diseases", [
         "infectious disease", "infection", "antibacterial", "antiviral",
         "hiv", "hepatitis", "tuberculosis", "covid", "sars cov", "sepsis",
         "antimicrobial", "vaccin", "microbiolog",
     ]),
-    ("Nefrología", [
+    ("Nephrology", [
         "kidney", "renal", "nephrolog", "dialysis", "glomerul",
         "kidney transplantation",
     ]),
-    ("Urología", [
+    ("Urology", [
         "urolog", "prostat", "bladder", "urinary", "kidney calculi",
         "endourol", "lithotripsy",
     ]),
-    ("Ginecología y obstetricia", [
+    ("Obstetrics and gynaecology", [
         "gynecol", "obstetric", "pregnancy complications", "uterine",
         "ovarian", "endometri", "cervix", "fertility", "breast neoplasm",
     ]),
-    ("Pediatría", [
+    ("Paediatrics", [
         "pediatr", "paediatr", "infant premature", "neonat", "childhood",
     ]),
-    ("Psiquiatría", [
+    ("Psychiatry", [
         "psychiatr", "depress", "schizophren", "bipolar", "anxiety",
         "mental disorder", "psychotropic", "addiction", "substance related",
     ]),
-    ("Traumatología y ortopedia", [
+    ("Orthopaedics and traumatology", [
         "orthoped", "fracture", "arthroplasty", "joint", "spine", "bone",
         "musculoskeletal", "tendon", "knee", "hip",
     ]),
-    ("Anestesiología", [
+    ("Anaesthesiology", [
         "anesthes", "anaesthes", "analgesi", "sedation", "pain management",
         "critical care", "intensive care",
     ]),
-    ("Medicina interna", [
+    ("Internal medicine", [
         "internal medicine", "primary health care", "general practice",
         "family practice",
     ]),
-    ("Radiología y diagnóstico por imagen", [
+    ("Radiology and diagnostic imaging", [
         "radiolog", "tomography", "magnetic resonance imaging", "ultrasonograph",
         "radiograph", "nuclear medicine", "positron emission",
     ]),
-    ("Farmacia y farmacología", [
+    ("Pharmacy and pharmacology", [
         "pharmacolog", "pharmacokinet", "pharmac", "drug therapy",
         "drug related side effects", "clinical pharmacy",
     ]),
-    ("Genética y biología molecular", [
+    ("Genetics and molecular biology", [
         "genetic", "genom", "mutation", "gene expression", "microrna",
         "epigenet", "sequencing", "molecular biology",
     ]),
-    ("Salud pública y epidemiología", [
+    ("Public health and epidemiology", [
         "public health", "epidemiolog", "health policy", "screening",
         "mass screening", "health services",
     ]),
@@ -274,14 +274,14 @@ def inferir_especialidad(papers, minimo=2, servicio_texto=None):
     # de refilón.
     candidatas = sorted(votos, key=lambda n: (fuertes[n], votos[n]), reverse=True)
     mejor = candidatas[0]
-    origen_senal = "publicaciones"
+    origen_senal = "publications"
 
     # El servicio del KOL desempata, si sus papers lo respaldan.
     por_servicio, _ = _especialidad_por_texto(servicio_texto)
     if por_servicio and fuertes[por_servicio] >= minimo and por_servicio != mejor:
         candidatas = [por_servicio] + [c for c in candidatas if c != por_servicio]
         mejor = por_servicio
-        origen_senal = "servicio"
+        origen_senal = "department"
 
     if fuertes[mejor] < minimo:
         return None
@@ -289,11 +289,11 @@ def inferir_especialidad(papers, minimo=2, servicio_texto=None):
     total = len(papers)
     cobertura = fuertes[mejor] / total
     if cobertura >= 0.5:
-        confianza = "alta"
+        confianza = "high"
     elif cobertura >= 0.25:
-        confianza = "media"
+        confianza = "medium"
     else:
-        confianza = "baja"
+        confianza = "low"
 
     return {
         "nombre": mejor,
@@ -500,27 +500,26 @@ def trayectoria(papers, anio_actual):
 # plural en castellano no se saca con una regla de una línea (metaanálisis es
 # invariable, guía de práctica clínica pluraliza solo la primera palabra).
 _TIPOS_INTERESANTES = {
-    "Randomized Controlled Trial": ("Ensayo clínico aleatorizado",
-                                    "ensayos clínicos aleatorizados"),
-    "Clinical Trial": ("Ensayo clínico", "ensayos clínicos"),
-    "Clinical Trial, Phase I": ("Ensayo clínico fase I",
-                                "ensayos clínicos fase I"),
-    "Clinical Trial, Phase II": ("Ensayo clínico fase II",
-                                 "ensayos clínicos fase II"),
-    "Clinical Trial, Phase III": ("Ensayo clínico fase III",
-                                  "ensayos clínicos fase III"),
-    "Multicenter Study": ("Estudio multicéntrico", "estudios multicéntricos"),
-    "Meta-Analysis": ("Metaanálisis", "metaanálisis"),
-    "Systematic Review": ("Revisión sistemática", "revisiones sistemáticas"),
-    "Review": ("Revisión", "revisiones"),
-    "Practice Guideline": ("Guía de práctica clínica",
-                           "guías de práctica clínica"),
-    "Guideline": ("Guía", "guías"),
-    "Observational Study": ("Estudio observacional",
-                            "estudios observacionales"),
-    "Case Reports": ("Caso clínico", "casos clínicos"),
-    "Editorial": ("Editorial", "editoriales"),
-    "Comment": ("Comentario", "comentarios"),
+    "Randomized Controlled Trial": ("Randomised controlled trial",
+                                    "randomised controlled trials"),
+    "Clinical Trial": ("Clinical trial", "clinical trials"),
+    "Clinical Trial, Phase I": ("Phase I clinical trial",
+                                "phase I clinical trials"),
+    "Clinical Trial, Phase II": ("Phase II clinical trial",
+                                 "phase II clinical trials"),
+    "Clinical Trial, Phase III": ("Phase III clinical trial",
+                                  "phase III clinical trials"),
+    "Multicenter Study": ("Multicentre study", "multicentre studies"),
+    "Meta-Analysis": ("Meta-analysis", "meta-analyses"),
+    "Systematic Review": ("Systematic review", "systematic reviews"),
+    "Review": ("Review", "reviews"),
+    "Practice Guideline": ("Clinical practice guideline",
+                           "clinical practice guidelines"),
+    "Guideline": ("Guideline", "guidelines"),
+    "Observational Study": ("Observational study", "observational studies"),
+    "Case Reports": ("Case report", "case reports"),
+    "Editorial": ("Editorial", "editorials"),
+    "Comment": ("Comment", "comments"),
 }
 
 
@@ -563,37 +562,40 @@ def resumen(especialidad, serv, tray, lineas, pub_stats):
 
     area = (especialidad or {}).get("nombre")
     if area and serv:
-        frases.append(f"Trabaja en {serv['nombre']}; su producción científica "
-                      f"lo sitúa en {area.lower()}.")
+        frases.append(f"Works in {serv['nombre']}; their published work "
+                      f"places them in {area.lower()}.")
     elif area:
-        frases.append(f"Su producción científica lo sitúa en {area.lower()}.")
+        frases.append(f"Their published work places them in {area.lower()}.")
     elif serv:
-        frases.append(f"Trabaja en {serv['nombre']}.")
+        frases.append(f"Works in {serv['nombre']}.")
 
     if tray:
-        estado = ("y sigue publicando" if tray["activo"]
-                  else f"aunque su última publicación indexada es de "
+        estado = ("and is still publishing" if tray["activo"]
+                  else f"though their latest indexed publication is from "
                        f"{tray['ultimo_anio']}")
+        n_anios = tray["anios_activo"]
+        span = f"{n_anios} year" + ("" if n_anios == 1 else "s")
         frases.append(
-            f"Publica desde {tray['primer_anio']} ({tray['anios_activo']} años, "
-            f"media de {tray['media_anual']} trabajos/año) {estado}.")
+            f"Publishing since {tray['primer_anio']} ({span}, "
+            f"{tray['media_anual']} papers/year on average) {estado}.")
 
     n_lidera = pub_stats.get("first_last_author_count", 0)
     n_total = pub_stats.get("count", 0)
     if n_total:
         if n_lidera == 0:
             frases.append(
-                f"En los {n_total} trabajos verificados firma siempre en "
-                "posición intermedia: participa en grupos amplios más que "
-                "liderando línea propia.")
+                f"Across the {n_total} verified paper{'' if n_total == 1 else 's'} "
+                "they always sign in a "
+                "middle position: they take part in large groups rather than "
+                "leading a line of their own.")
         else:
             frases.append(
-                f"Lidera como primer o último autor en {n_lidera} de "
-                f"{n_total} trabajos.")
+                f"They lead as first or last author on {n_lidera} of "
+                f"{n_total} paper{'' if n_total == 1 else 's'}.")
 
     recurrentes = [l for l in (lineas or []) if l.get("recurrente")][:3]
     if recurrentes:
-        frases.append("Sus temas recurrentes: "
+        frases.append("Recurring topics: "
                       + ", ".join(l["tema"] for l in recurrentes) + ".")
     else:
         # Sin temas repetidos: obra dispersa. Decirlo, en vez de disfrazar tres
@@ -601,13 +603,13 @@ def resumen(especialidad, serv, tray, lineas, pub_stats):
         sueltos = [l["tema"] for l in (lineas or [])][:3]
         if sueltos:
             frases.append(
-                "Ningún tema se repite en su obra: publica sobre asuntos "
-                "variados. Lo más reciente, " + ", ".join(sueltos) + ".")
+                "No topic repeats across their work: they publish on varied "
+                "subjects. Most recently, " + ", ".join(sueltos) + ".")
 
     if not frases:
-        return ("No hay publicaciones verificadas suficientes para describir su "
-                "perfil científico. Conviene confirmar los datos con el propio "
-                "KOL o aportar su ORCID.")
+        return ("There are not enough verified publications to describe their "
+                "scientific profile. Worth confirming the data with the KOL "
+                "directly, or supplying their ORCID.")
     return " ".join(frases)
 
 
@@ -632,35 +634,35 @@ def construir(papers, surname, anio_actual, especialidad_declarada=None,
     if especialidad_declarada:
         esp = {
             "nombre": especialidad_declarada,
-            "origen": "declarada",
-            "confianza": "alta",
-            "detalle": "Especialidad indicada manualmente.",
+            "origen": "declared",
+            "confianza": "high",
+            "detalle": "Specialty supplied manually.",
         }
         if inferida and normalize(inferida["nombre"]) != normalize(especialidad_declarada):
             esp["inferida_de_papers"] = inferida["nombre"]
     elif inferida:
         esp = {
             "nombre": inferida["nombre"],
-            "origen": "inferida",
+            "origen": "inferred",
             "confianza": inferida["confianza"],
             "detalle": (
-                f"Coincide con el servicio que consta en su afiliación, y "
-                f"{inferida['papers_que_la_sostienen']} de "
-                f"{inferida['total_papers']} publicaciones lo respaldan."
-                if inferida["origen_senal"] == "servicio" else
-                f"Deducida de los descriptores MeSH y las revistas de sus "
-                f"publicaciones: {inferida['papers_que_la_sostienen']} de "
-                f"{inferida['total_papers']} encajan en esta área."
+                f"Matches the department recorded in their affiliation, and "
+                f"{inferida['papers_que_la_sostienen']} of "
+                f"{inferida['total_papers']} publications support it."
+                if inferida["origen_senal"] == "department" else
+                f"Derived from the MeSH descriptors and journals of their "
+                f"publications: {inferida['papers_que_la_sostienen']} of "
+                f"{inferida['total_papers']} fit this field."
             ),
             "alternativas": inferida["alternativas"],
         }
     else:
         esp = {
             "nombre": None,
-            "origen": "no determinada",
-            "confianza": "baja",
-            "detalle": ("No hay publicaciones suficientes para deducir el área "
-                        "con fiabilidad."),
+            "origen": "undetermined",
+            "confianza": "low",
+            "detalle": ("There are not enough publications to derive the field "
+                        "reliably."),
         }
 
     lineas = lineas_investigacion(papers)

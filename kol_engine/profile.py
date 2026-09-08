@@ -86,7 +86,7 @@ def _pub_stats(analysis, anio_actual):
 
     recent_5y = sum(1 for p in kept if _anio(p) >= anio_actual - 5)
     first_last = sum(1 for p in kept
-                     if p.get("author_position") in ("primera", "última"))
+                     if p.get("author_position") in ("first", "last"))
     journals = sorted({p.get("journal", "") for p in kept if p.get("journal")})
 
     items = []
@@ -96,7 +96,7 @@ def _pub_stats(analysis, anio_actual):
             "title": p.get("title", ""),
             "journal": p.get("journal", ""),
             "year": p.get("year", ""),
-            "author_position": p.get("author_position", "desconocida"),
+            "author_position": p.get("author_position", "unknown"),
             "verified": p in verificados,
         })
     # Ordena por anio descendente (mas reciente primero).
@@ -161,129 +161,132 @@ def _briefing(pub_stats, trials, perfil, identity):
     recurrentes = [l for l in lineas if l.get("recurrente")][:3]
     temas_centrales = recurrentes or lineas[:3]
     if recurrentes:
-        listado = ", ".join(f"{l['tema']} ({l['papers']} trabajos)"
+        listado = ", ".join(f"{l['tema']} ({l['papers']} papers)"
                             for l in recurrentes)
-        puntos.append(f"Sus líneas más constantes son {listado}. "
-                      "Es el terreno donde la conversación le resultará propia.")
+        puntos.append(f"Their steadiest lines are {listado}. "
+                      "This is the ground where the conversation will feel "
+                      "like their own.")
     elif lineas:
         listado = ", ".join(f"{l['tema']} ({l['ultimo_anio']})"
                             for l in lineas[:3])
         puntos.append(
-            f"No repite tema: su obra es temáticamente dispersa. Lo más "
-            f"reciente que ha tocado es {listado}. Mejor preguntar en qué "
-            "trabaja ahora que asumir una línea.")
+            f"No topic repeats: their work is thematically scattered. The "
+            f"most recent ground they covered is {listado}. Better to ask "
+            "what they are working on now than to assume a line.")
 
     # 2. Dónde lidera: primer o último autor es donde firma como responsable.
     lidera = [it for it in items
-              if it["author_position"] in ("primera", "última", "ultima")]
+              if it["author_position"] in ("first", "last")]
     if lidera:
         it = lidera[0]
-        rol = "primer" if it["author_position"] == "primera" else "último"
+        rol = "first" if it["author_position"] == "first" else "last"
         puntos.append(
-            f"Firma como {rol} autor «{_recortar(it['title'])}» "
-            f"({it['journal']}, {it['year']}): trabajo suyo, no de un grupo "
-            "en el que solo participa.")
+            f"They sign as {rol} author on «{_recortar(it['title'])}» "
+            f"({it['journal']}, {it['year']}): their own work, not a group's "
+            "they merely take part in.")
     elif items:
         it = items[0]
         puntos.append(
-            f"Su publicación más reciente es «{_recortar(it['title'])}» "
-            f"({it['journal']}, {it['year']}), en posición intermedia — "
-            "participa en grupos amplios más que liderando.")
+            f"Their most recent publication is «{_recortar(it['title'])}» "
+            f"({it['journal']}, {it['year']}), in a middle position — they "
+            "take part in large groups rather than leading.")
 
     # 3. Ritmo de producción: dice con quién estás hablando hoy, no hace 10 años.
     if tray:
         if tray["activo"]:
             puntos.append(
-                f"Publica desde {tray['primer_anio']} a un ritmo de "
-                f"{tray['media_anual']} trabajos/año y sigue activo "
-                f"(último en {tray['ultimo_anio']}): interlocutor en producción.")
+                f"Publishing since {tray['primer_anio']} at {tray['media_anual']} "
+                f"papers/year and still active (latest in {tray['ultimo_anio']}): "
+                "an interlocutor in full production.")
         else:
             puntos.append(
-                f"Su última publicación indexada es de {tray['ultimo_anio']}. "
-                "Conviene preguntar en qué está trabajando ahora antes de "
-                "asumir que sigue en la misma línea.")
+                f"Their latest indexed publication is from {tray['ultimo_anio']}. "
+                "Worth asking what they are working on now before assuming "
+                "they are still on the same line.")
 
     # 4. Tipo de evidencia que genera.
     relevantes = [t for t in tipos if t["tipo"] not in
-                  ("Revisión", "Comentario", "Editorial", "Caso clínico")]
+                  ("Review", "Comment", "Editorial", "Case report")]
     if relevantes:
         listado = ", ".join(t["texto"] for t in relevantes[:3])
-        puntos.append(f"Genera evidencia: {listado}. "
-                      "Es un perfil con el que se puede hablar de diseño de estudio.")
+        puntos.append(f"Generates evidence: {listado}. "
+                      "A profile you can discuss study design with.")
 
     # 5. Su red: puertas de entrada.
     if colabs:
         listado = ", ".join(f"{c['nombre']} ({c['papers']})" for c in colabs[:3])
-        puntos.append(f"Coautores habituales: {listado}. "
-                      "Si ya hay relación con alguno, es una vía de acceso.")
+        puntos.append(f"Frequent co-authors: {listado}. "
+                      "If there is already a relationship with any of them, "
+                      "that is a way in.")
 
     if not puntos:
-        puntos = ["No se han verificado publicaciones suficientes para preparar "
-                  "puntos concretos. Abrir con preguntas sobre su área de "
-                  "interés actual y su actividad asistencial."]
+        puntos = ["Not enough publications were verified to prepare concrete "
+                  "points. Open with questions about what currently interests "
+                  "them and about their clinical work."]
 
     # ---- Hacer ----
     hacer = []
     if recurrentes:
-        hacer.append(f"Entrar por {recurrentes[0]['tema']}: es su tema con "
-                     f"más recorrido ({recurrentes[0]['papers']} trabajos).")
+        n = recurrentes[0]['papers']
+        hacer.append(f"Open with {recurrentes[0]['tema']}: their most "
+                     f"developed topic ({n} paper{'' if n == 1 else 's'}).")
     elif temas_centrales:
-        hacer.append(f"Entrar por {temas_centrales[0]['tema']}, el asunto de su "
-                     f"trabajo más reciente ({temas_centrales[0]['ultimo_anio']}).")
+        hacer.append(f"Open with {temas_centrales[0]['tema']}, the subject of "
+                     f"their most recent paper ({temas_centrales[0]['ultimo_anio']}).")
     if area:
-        hacer.append(f"Preparar preguntas concretas de {area.lower()}, no "
-                     "genéricas de área terapéutica.")
+        hacer.append(f"Prepare specific {area.lower()} questions, not generic "
+                     "therapeutic-field ones.")
     if lidera:
-        hacer.append(f"Referenciar «{_recortar(lidera[0]['title'], 60)}», donde "
-                     "figura como autor responsable.")
-    hacer.append("Escuchar sus necesidades científicas no cubiertas y "
-                 "registrarlas literalmente.")
+        hacer.append(f"Reference «{_recortar(lidera[0]['title'], 60)}», where "
+                     "they appear as the responsible author.")
+    hacer.append("Listen for their unmet scientific needs and record them "
+                 "verbatim.")
     if trials:
-        hacer.append(f"Preguntar por su papel en los {trials['verified_count']} "
-                     "ensayo(s) verificado(s) y por su capacidad de reclutamiento.")
+        hacer.append(f"Ask about their role in the {trials['verified_count']} "
+                     "verified trial(s) and about their recruitment capacity.")
 
     # ---- Evitar ----
-    evitar = ["No presentar mensajes promocionales: el contacto es científico."]
+    evitar = ["Do not bring promotional messages: this is a scientific contact."]
     if pub_stats["excluded_count"]:
         evitar.append(
-            f"No atribuirle los {pub_stats['excluded_count']} trabajo(s) "
-            "excluidos por afiliación: son de homónimos, y confundirlos "
-            "destruye la credibilidad en el primer minuto.")
+            f"Do not attribute to them the {pub_stats['excluded_count']} paper(s) "
+            "excluded by affiliation: they belong to homonyms, and confusing "
+            "them destroys credibility in the first minute.")
     else:
-        evitar.append("No atribuirle trabajo no verificado.")
+        evitar.append("Do not attribute unverified work to them.")
     if pub_stats["unverified_count"]:
         evitar.append(
-            f"No dar por seguras las {pub_stats['unverified_count']} "
-            "publicación(es) sin afiliación confirmada.")
+            f"Do not take the {pub_stats['unverified_count']} publication(s) "
+            "without a confirmed affiliation as certain.")
     if not trials:
-        evitar.append("No dar por hecho que participa en ensayos: no se ha "
-                      "verificado ninguno en su centro.")
-    evitar.append("No citar el h-index de Europe PMC: está sin desambiguar.")
+        evitar.append("Do not assume they take part in trials: none was "
+                      "verified at their centre.")
+    evitar.append("Do not quote the Europe PMC h-index: it is not disambiguated.")
 
     # ---- Congresos ----
     congresos = []
     if area:
         congresos.append({
-            "name": f"Congreso nacional de {area.lower()}",
-            "note": "sugerido por su área — verificar agenda real del KOL",
+            "name": f"National {area.lower()} congress",
+            "note": "suggested by their field — check the KOL's real agenda",
         })
     else:
         congresos.append({
-            "name": "Congreso de su área de trabajo",
-            "note": "sin área determinada — confirmar con el propio KOL",
+            "name": "Congress in their field of work",
+            "note": "field undetermined — confirm with the KOL directly",
         })
 
     # ---- Checklist ----
     checklist = [
-        "Confirmar disponibilidad y formato de la reunión.",
-        "Revisar sus últimas publicaciones verificadas antes de entrar.",
+        "Confirm availability and meeting format.",
+        "Review their latest verified publications before going in.",
     ]
     if temas_centrales:
-        checklist.append(f"Llevar material científico específico de "
+        checklist.append(f"Bring scientific material specific to "
                          f"{temas_centrales[0]['tema']}.")
     else:
-        checklist.append("Llevar material científico de su área asistencial.")
-    checklist.append("Registrar la interacción en el CRM tras la visita.")
+        checklist.append("Bring scientific material for their clinical field.")
+    checklist.append("Log the interaction in the CRM after the visit.")
 
     return {
         "talking_points": puntos,
@@ -356,15 +359,15 @@ def build_profile(full_name, institution, city, country, orcid, specialty,
 
     if trials_error:
         # Nunca afirmar "0 ensayos" cuando en realidad no se pudo mirar.
-        trial_note = ("NO COMPROBADO: no se pudo consultar ClinicalTrials.gov "
-                      f"({trials_error}). El apartado de ensayos queda sin "
-                      "verificar; no interpretar como ausencia de ensayos.")
+        trial_note = ("NOT CHECKED: ClinicalTrials.gov could not be queried "
+                      f"({trials_error}). The trials section is left "
+                      "unverified; do not read it as an absence of trials.")
     elif trials is None:
-        trial_note = ("0 ensayos verificados contra la localización del KOL "
-                      "(resultado válido: no se atribuye trabajo de homónimos).")
+        trial_note = ("0 trials verified against the KOL's location "
+                      "(a valid result: no work by homonyms is attributed).")
     else:
-        trial_note = (f"{trials['verified_count']} ensayo(s) verificado(s) por "
-                      "localización.")
+        trial_note = (f"{trials['verified_count']} trial(s) verified by "
+                      "location.")
 
     profile = {
         "identity": identity,

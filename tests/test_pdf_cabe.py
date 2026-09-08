@@ -28,7 +28,7 @@ def _perfil(n_papers, n_ensayos, n_anios):
             "title": ("Estudio muy largo sobre glioblastoma multiforme y su "
                       "manejo quirurgico en pacientes de edad avanzada " + str(i)),
             "journal": f"Journal of Very Long Names {i % 25}",
-            "year": str(anio), "author_position": "primera",
+            "year": str(anio), "author_position": "first",
             "mesh": ["Glioblastoma", "Brain Neoplasms", "Mutation",
                      "Neoplasm Recurrence, Local", "Meningeal Neoplasms",
                      "Antineoplastic Combined Chemotherapy Protocols"],
@@ -53,7 +53,7 @@ def _perfil(n_papers, n_ensayos, n_anios):
              "location": "Valencia"} for i in range(n_ensayos)]}, "log": {}}
     else:
         trials = {"trials": None, "log": {}}
-    metrics = {"hindex_europepmc": "NO VERIFICADO", "citations": "NO VERIFICADO",
+    metrics = {"hindex_europepmc": "NOT VERIFIED", "citations": "NOT VERIFIED",
                "epmc_raw_hits": 10, "note": "x"}
     return profile.build_profile(
         "Dra. Teresa San-Miguel", "Hospital La Fe", "Valencia", "España",

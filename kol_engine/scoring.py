@@ -87,14 +87,14 @@ def compute_score(pub_stats, trials, specialty=None, crm_interactions=0,
     if trials_available:
         medibles.append("trials")
     else:
-        excluded["trials"] = ("ClinicalTrials.gov no respondió: no se puede "
-                              "puntuar lo que no se ha podido comprobar.")
+        excluded["trials"] = ("ClinicalTrials.gov did not answer: what could "
+                              "not be checked cannot be scored.")
 
     if crm_interactions > 0:
         medibles.append("crm")
     else:
-        excluded["crm"] = ("Sin integración CRM: 0 interacciones registradas. "
-                           "No puntúa ni penaliza.")
+        excluded["crm"] = ("No CRM integration: 0 interactions on record. "
+                           "It neither scores nor penalises.")
 
     maximo = sum(PESOS[k] for k in medibles)
     bruto = sum(breakdown[k] for k in medibles)

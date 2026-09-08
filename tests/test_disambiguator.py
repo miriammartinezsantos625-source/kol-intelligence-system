@@ -76,21 +76,21 @@ def test_doctor_no_es_termino_de_localizacion():
 def test_orcid_da_confianza_alta():
     s = build_strategy("Dra. Teresa San-Miguel", institution="Hospital La Fe",
                        city="Valencia", orcid="0000-0001-2345-6789")
-    assert s["confidence"] == "alta"
+    assert s["confidence"] == "high"
     assert "[auid]" in s["query_used"]
 
 
 def test_afiliacion_da_confianza_media():
     s = build_strategy("Dra. Teresa San-Miguel", institution="Hospital La Fe",
                        city="Valencia")
-    assert s["confidence"] == "media"
+    assert s["confidence"] == "medium"
     assert "[Author]" in s["query_used"]
     assert "[Affiliation]" in s["query_used"]
 
 
 def test_solo_nombre_da_confianza_baja():
     s = build_strategy("Teresa San-Miguel")
-    assert s["confidence"] == "baja"
+    assert s["confidence"] == "low"
 
 
 def test_query_sin_tildes():

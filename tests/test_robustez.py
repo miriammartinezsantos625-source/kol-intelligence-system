@@ -95,42 +95,42 @@ def _analysis_minimo():
 
 
 def _metrics():
-    return {"hindex_europepmc": "NO VERIFICADO", "citations": "NO VERIFICADO",
+    return {"hindex_europepmc": "NOT VERIFIED", "citations": "NOT VERIFIED",
             "epmc_raw_hits": None, "note": ""}
 
 
 def test_cero_ensayos_real_se_declara_valido():
     perfil = build_profile("Ana Ruiz", "Hospital X", "Madrid", "ES", None, None,
-                           {"query_used": "q", "confidence": "media",
+                           {"query_used": "q", "confidence": "medium",
                             "notes": "", "location_terms": ["madrid"],
                             "surname": "Ruiz", "initial": "a"},
                            _analysis_minimo(), {"trials": None, "log": {}},
                            _metrics())
     nota = perfil["verification_note"]["trial_note"]
-    assert "resultado válido" in nota
-    assert "NO COMPROBADO" not in nota
+    assert "a valid result" in nota
+    assert "NOT CHECKED" not in nota
 
 
 def test_fallo_de_api_no_se_presenta_como_cero_verificado():
     """El bug mas grave: una caida de red se publicaba como
     '0 ensayos verificados (resultado valido)'."""
     perfil = build_profile("Ana Ruiz", "Hospital X", "Madrid", "ES", None, None,
-                           {"query_used": "q", "confidence": "media",
+                           {"query_used": "q", "confidence": "medium",
                             "notes": "", "location_terms": ["madrid"],
                             "surname": "Ruiz", "initial": "a"},
                            _analysis_minimo(),
                            {"trials": None, "log": {}, "error": "timeout"},
                            _metrics())
     nota = perfil["verification_note"]["trial_note"]
-    assert "NO COMPROBADO" in nota
-    assert "resultado válido" not in nota
+    assert "NOT CHECKED" in nota
+    assert "a valid result" not in nota
     # y el score no penaliza por algo que no se ha mirado
     assert "trials" in perfil["score"]["excluded"]
 
 
 def test_el_perfil_publica_la_cobertura():
     perfil = build_profile("Ana Ruiz", "Hospital X", "Madrid", "ES", None, None,
-                           {"query_used": "q", "confidence": "media",
+                           {"query_used": "q", "confidence": "medium",
                             "notes": "", "location_terms": ["madrid"],
                             "surname": "Ruiz", "initial": "a"},
                            _analysis_minimo(), {"trials": None, "log": {}},
@@ -230,7 +230,7 @@ def test_un_coautor_llamado_como_la_blocklist_no_es_fuga(tmp_path):
     finally:
         v._leer_pdf_texto = original
 
-    fuga = [c for c in informe["checks"] if "previos" in c["name"]][0]
+    fuga = [c for c in informe["checks"] if "previous KOLs" in c["name"]][0]
     assert fuga["passed"], fuga["detail"]
     assert "Jesus San Miguel" in DEFAULT_BLOCKLIST
 
@@ -256,6 +256,6 @@ def test_una_fuga_de_verdad_sigue_detectandose(tmp_path):
     finally:
         v._leer_pdf_texto = original
 
-    fuga = [c for c in informe["checks"] if "previos" in c["name"]][0]
+    fuga = [c for c in informe["checks"] if "previous KOLs" in c["name"]][0]
     assert not fuga["passed"]
     assert "John Doe" in fuga["detail"]

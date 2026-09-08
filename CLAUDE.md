@@ -3,10 +3,15 @@
 > Claude Code reads this file **when it opens the project**. It summarises what
 > this is, the rules the code MUST honour, and how to run it.
 >
-> Note on language: this document and the README are in English; the code,
-> comments and user-facing strings are in Spanish, and the deliverables are
-> written in Spanish on purpose (the users are MSLs working with Spanish
-> hospitals). Do not "fix" that inconsistency without being asked.
+> Note on language: **everything the user reads is in English** — this
+> document, the README, the web interface, the CLI, the dashboard and the PDF
+> dossier. **Inside the code, comments and identifiers stay in Spanish**
+> (`candidatos.py`, `nombre_de_autor`, `lineas_investigacion`), and so do the
+> JSON keys, which are part of that internal vocabulary. Do not "fix" that
+> split without being asked.
+>
+> Source data is never translated: Spanish hospital and department names,
+> cities and the titles of Spanish-language papers are quoted verbatim.
 
 ## What it is (30-second summary)
 
@@ -112,19 +117,42 @@ The CLI (`kol.py`) still takes both name and institution.
   result" while ClinicalTrials was down.
 - **`verify.py`'s blocklist ignores real co-authors**: a listed name that signs
   alongside the current KOL is not template contamination.
-- **Accents**: PubMed queries go WITHOUT accents; outputs WITH accents.
-  Guarded by `tests/test_tildes.py`, which walks the JSON, the PDF and the
-  dashboard looking for misspelled Spanish words.
+- **Accents**: PubMed queries go WITHOUT accents. Since the deliverables are
+  written in English, the rule now bites on what stays Spanish and is quoted
+  verbatim — centre and department names, cities, Spanish paper titles: those
+  keep their accents. Guarded by `tests/test_tildes.py`, which walks the
+  JSON, the PDF and the dashboard looking for misspelled Spanish words.
+  Careful with its word list: `area` is an ordinary English word, which is
+  why the English strings in this project say "field" instead.
 - **Nothing invented**: with no evidence for a city, a specialty or a research
   line, return `None` and let the deliverable say so. A derived value is always
   labelled as such ("inferida", "deducida del centro").
-- **Agreement**: counts are written with matching number ("2 revisiones
-  sistemáticas", not "2 revisión sistemática").
+- **Agreement**: counts are written with matching number ("2 systematic
+  reviews", not "2 systematic review"; "1 year", not "1 years"). The plural
+  of each publication type lives in the `_TIPOS_INTERESANTES` table, not in a
+  naive "+s" rule — "meta-analyses" would not survive one.
 - **Single source of truth**: the dashboard and the PDF both derive from
   `kol_profile.json`, never separately.
 - **Final verification (step 9)**: an automated test, not a checklist.
 - **Every screen carries the footer** "creado por Miriam Martínez Santos, PhD"
   (constant `AUTORA` in `app.py`). The dashboard and the PDF do NOT carry it yet.
+
+## Engine values that are now English (and drive logic)
+
+These are compared against elsewhere, so changing one silently breaks a
+dependent. They moved from Spanish in September 2026:
+
+| Field | Values |
+|---|---|
+| `disambiguation.confidence` | `high` / `medium` / `low` — also the dashboard CSS classes `.conf.high` etc. |
+| `perfil_cientifico.especialidad.origen` | `declared` / `inferred` / `undetermined` — read by `pdf.py` and `app.py` |
+| `especialidad.confianza` | `high` / `medium` / `low` |
+| `especialidad.origen_senal` | `publications` / `department` |
+| `publications.items[].author_position` | `first` / `last` / `middle` / `unknown` — `profile.py` filters on it |
+| `metrics_unverified.*` | `NOT VERIFIED` (constant `NO_VERIFICADO` in `europepmc_agent`) |
+
+The dict KEYS around them are still Spanish on purpose (`nombre`, `ciudad`,
+`tema`, `servicio`, `origen_senal`): they are internal vocabulary, not text.
 
 ## How to run it
 
@@ -137,9 +165,11 @@ python kol.py "Dra. Teresa San-Miguel" "Hospital Universitari i Politècnic La F
 # Web interface (name first, then pick the centre)
 python3 app.py     # http://127.0.0.1:5001
 
-# Flags: --solo-json  --solo-dashboard  --solo-pdf  --no-cache
-# --ciudad / --especialidad only to FORCE a value; they are derived by default.
+# Flags: --json-only  --dashboard-only  --pdf-only  --no-cache
+# --city / --specialty only to FORCE a value; they are derived by default.
 # --orcid is the only input that raises confidence to "high".
+# The CLI surface is English; the argparse `dest` stays Spanish (args.ciudad),
+# so the rest of kol.py did not have to change.
 ```
 
 Output lands in `output/`: `kol_profile_{Name}.json`,

@@ -21,7 +21,7 @@ from . import cache_utils
 EPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest/search"
 TIMEOUT = 30
 
-NO_VERIFICADO = "NO VERIFICADO"
+NO_VERIFICADO = "NOT VERIFIED"
 
 
 def get_metrics(full_name, use_cache=True):
@@ -34,9 +34,9 @@ def get_metrics(full_name, use_cache=True):
         "hindex_europepmc": NO_VERIFICADO,
         "citations": NO_VERIFICADO,
         "epmc_raw_hits": None,
-        "note": ("Europe PMC no desambigua homónimos; sus métricas agregadas "
-                 "no son atribuibles a un KOL concreto. Cifras fiables: ver el "
-                 "bloque de publicaciones (set filtrado de PubMed)."),
+        "note": ("Europe PMC does not disambiguate homonyms; its aggregate "
+                 "metrics are not attributable to a specific KOL. Reliable "
+                 "figures: see the publications block (filtered PubMed set)."),
     }
     try:
         # Quita titulos simples para el nombre de autor.
@@ -144,7 +144,7 @@ def get_verified_metrics(pmids, use_cache=True):
         "papers_evaluados": len(pmids),
         "papers_encontrados": len(citas_por_pmid),
         "max_citas": max(citas) if citas else 0,
-        "note": ("Calculado sobre el set de publicaciones ya filtrado de "
-                 "homónimos, no sobre una búsqueda por nombre. Fuente de las "
-                 "citas: Europe PMC (citedByCount)."),
+        "note": ("Computed over the publication set already filtered for "
+                 "homonyms, not over a search by name. Citation source: "
+                 "Europe PMC (citedByCount)."),
     }
