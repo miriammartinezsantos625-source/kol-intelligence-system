@@ -134,7 +134,7 @@ The CLI (`kol.py`) still takes both name and institution.
 - **Single source of truth**: the dashboard and the PDF both derive from
   `kol_profile.json`, never separately.
 - **Final verification (step 9)**: an automated test, not a checklist.
-- **Every screen carries the footer** "creado por Miriam Martínez Santos, PhD"
+- **Every screen carries the footer** "created by Miriam Martínez Santos, PhD"
   (constant `AUTORA` in `app.py`). The dashboard and the PDF do NOT carry it yet.
 
 ## Engine values that are now English (and drive logic)
