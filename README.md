@@ -160,6 +160,17 @@ homonyms, derives city and specialty, describes the doctor's scientific profile
 and verifies its own output automatically. See `CLAUDE.md` for the phase-by-phase
 detail and for the hard rules the code must honour.
 
+## The Claude skill
+
+`SKILL.md` is the Claude Code skill that drives this engine: it collects the
+two inputs, runs the CLI and interprets the JSON instead of improvising the
+analysis. It is written in Spanish, because that is the language its author
+works in; everything the tool itself produces is English.
+
+## License
+
+MIT — see `LICENSE`.
+
 ---
 
 Created by **Miriam Martínez Santos, PhD**.

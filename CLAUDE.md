@@ -192,9 +192,17 @@ Output lands in `output/`: `kol_profile_{Name}.json`,
 - [x] **Phase 4** — `verify.py` (step 9 automated: 5 pages, current name
       present, 0 names from previous KOLs, well-formed PMIDs/NCTs, coherent
       badge) wired into `kol.py` (runs at the end; exit 3 on failure).
-- [x] **Phase 5** — `kol-intelligence-system` skill created: `SKILL.md` (at the
-      project root and in `~/.claude/skills/`) invokes the CLI and interprets
-      the JSON/console output instead of improvising the engine.
+- [x] **Phase 5** — `kol-intelligence-system` skill created: `SKILL.md`
+      invokes the CLI and interprets the JSON/console output instead of
+      improvising the engine.
+
+      **`SKILL.md` exists in THREE places and they drift.** The copy in this
+      repo is canonical; the other two are the project root (one level up from
+      here) and `~/.claude/skills/kol-intelligence-system/`, which is the one
+      Claude Code actually loads. After editing it, copy it to both — a stale
+      copy there is worse than no skill, because it tells Claude to call flags
+      that no longer exist. That is exactly what happened when the CLI flags
+      were translated: the skill still said `--solo-json` and `--ciudad`.
 - [x] **Phase 6** — *A dossier that actually talks about the doctor.*
       - `centros.py`: derives the city from the centre's name (catalogue of
         Spanish hospitals + written city + mentioned city). When in doubt,
