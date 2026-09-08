@@ -403,5 +403,5 @@ def save_profile(profile, output_dir):
     # Atomica: si dos perfiles del mismo KOL se generan a la vez (Flask es
     # multihilo), nadie debe poder leer un JSON a medio escribir.
     escritura_atomica(ruta, json.dumps(profile, ensure_ascii=False, indent=2))
-    logger.info("perfil guardado: %s", ruta)
+    logger.info("profile saved: %s", ruta)
     return ruta

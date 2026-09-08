@@ -596,7 +596,7 @@ def render_pdf(profile, output_dir):
         except OSError:
             pass
         raise
-    logger.info("dossier PDF generado: %s", ruta)
+    logger.info("PDF dossier generated: %s", ruta)
     return ruta
 
 

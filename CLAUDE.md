@@ -126,7 +126,7 @@ The CLI (`kol.py`) still takes both name and institution.
   why the English strings in this project say "field" instead.
 - **Nothing invented**: with no evidence for a city, a specialty or a research
   line, return `None` and let the deliverable say so. A derived value is always
-  labelled as such ("inferida", "deducida del centro").
+  labelled as such ("inferred", "derived from the centre").
 - **Agreement**: counts are written with matching number ("2 systematic
   reviews", not "2 systematic review"; "1 year", not "1 years"). The plural
   of each publication type lives in the `_TIPOS_INTERESANTES` table, not in a

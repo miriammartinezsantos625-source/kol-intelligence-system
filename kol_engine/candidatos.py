@@ -408,7 +408,7 @@ def buscar_candidatos(nombre, surname=None, max_pmids=MAX_PMIDS_BUSQUEDA,
                          "nombre_autor": nombre_de_autor(autor)})
 
     candidatos = agrupar_por_centro(entradas)
-    logger.info("candidatos para %s: %d centros sobre %d papers analizados "
+    logger.info("candidates for %s: %d centres over %d papers analysed "
                 "(%d en PubMed)", nombre, len(candidatos), len(papers), total)
 
     return {

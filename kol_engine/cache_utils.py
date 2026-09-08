@@ -69,10 +69,10 @@ def read(ruta, use_cache=True):
         with open(ruta, "r", encoding="utf-8") as f:
             contenido = f.read()
     except OSError as e:
-        logger.warning("cache ilegible %s: %s", ruta, e)
+        logger.warning("unreadable cache %s: %s", ruta, e)
         return None
     if not contenido.strip():
-        logger.warning("cache vacía, se descarta y se vuelve a pedir: %s", ruta)
+        logger.warning("empty cache entry, discarded and re-fetched: %s", ruta)
         return None
     return contenido
 
@@ -126,5 +126,5 @@ def prune(max_age_days=None):
         except OSError:
             continue
     if borrados:
-        logger.info("cache: %d entradas caducadas eliminadas", borrados)
+        logger.info("cache: %d expired entries removed", borrados)
     return borrados

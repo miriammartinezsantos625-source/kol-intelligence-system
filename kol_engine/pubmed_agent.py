@@ -276,14 +276,14 @@ def _parse_articles(xml_text):
     """
     papers = []
     if not (xml_text or "").strip():
-        raise RespuestaInvalida("efetch devolvió una respuesta vacía")
+        raise RespuestaInvalida("efetch returned an empty response")
     try:
         raiz = ET.fromstring(xml_text)
     except ET.ParseError as e:
         # Un XML cortado daba 0 papers sin rechistar: el KOL aparecia sin
         # obra publicada. Preferimos fallar y que se reintente.
         raise RespuestaInvalida(
-            f"XML de efetch ilegible ({e}); {len(xml_text)} caracteres") from e
+            f"unreadable efetch XML ({e}); {len(xml_text)} characters") from e
 
     for art in raiz.findall(".//PubmedArticle"):
         cita = art.find(".//MedlineCitation")

@@ -39,9 +39,9 @@ def run_pipeline(nombre, institucion=None, ciudad=None, pais=None, orcid=None,
     try:
         cache_utils.prune()
     except OSError as e:
-        logger.warning("no se pudo limpiar la caché: %s", e)
+        logger.warning("could not prune the cache: %s", e)
 
-    logger.info("perfil solicitado: %s (%s)", nombre, institucion or "sin centro")
+    logger.info("profile requested: %s (%s)", nombre, institucion or "no centre")
 
     # Sin tope explicito se usa el del agente (1.000), no 200: con 200 un KOL
     # prolifico perdia el 70% de su obra y su biografia salia recortada.

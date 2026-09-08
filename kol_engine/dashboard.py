@@ -34,5 +34,5 @@ def render_dashboard(profile, output_dir):
     slug = _slug(profile["identity"]["full_name"])
     ruta = os.path.join(output_dir, f"KOL_Dashboard_{slug}.html")
     escritura_atomica(ruta, html)
-    logger.info("dashboard generado: %s", ruta)
+    logger.info("dashboard generated: %s", ruta)
     return ruta
